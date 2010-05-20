@@ -24,6 +24,7 @@ function gp() {
 function gpo() {
   git push origin $* --tags
 }
+alias gpom="git push origin master"
 function gc() {
   git commit -a -m "$1"
 }
