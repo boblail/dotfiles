@@ -15,7 +15,7 @@ alias rst="touch tmp/restart.txt"
 
 # git
 alias ga="git add ."
-alias gs="git status"
+alias s="git status"
 alias gd="git diff"
 alias amend="git commit --amend"
 function gp() {
