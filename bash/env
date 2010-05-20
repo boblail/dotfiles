@@ -1,7 +1,10 @@
 # for configuring environment: paths, etc
 
 # path
-export PATH=$PATH:~/Me/bin:/usr/local/mysql/bin
+export PATH=~/Me/bin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:$PATH
+
+# macports
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 
 # TextMate is the preferred editor
 export EDITOR="mate -w"

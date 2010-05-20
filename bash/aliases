@@ -14,19 +14,28 @@ alias mig="rake db:migrate db:test:clone"
 alias rst="touch tmp/restart.txt"
 
 # git
-alias ga="git add ."
+function g() {
+  git checkout $*
+}
 alias s="git status"
+alias ga="git add ."
 alias gd="git diff"
+function gm() {
+  git merge $*
+}
 alias amend="git commit --amend"
 function gp() {
   git push $* --tags
 }
 function gpo() {
-  git push origin $* --tags
+  # pushes the current branch; whatever that is
+  current_branch=$(branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+  git push origin $current_branch --tags
 }
 alias gpom="git push origin master"
 function gc() {
-  git commit -a -m "$1"
+  #git commit -a -m "$*"
+  git commit -a -m $1
 }
 function gchk() {
   git checkout $*
@@ -40,9 +49,12 @@ function test() {
   cat $*
 }
 
+# mysql
+alias m="mysql"
+
 # commands
 alias aps="cd /var/www/apps"
 alias htm="cd /var/www/html"
 alias alr=". ~/Me/bash/aliases"
 alias _al="$EDITOR ~/Me/bash/aliases && alr"
-alias _me="$EDITOR ~/Me/bash"
+alias _me="$EDITOR ~/Me"
