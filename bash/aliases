@@ -28,7 +28,7 @@ function gp() {
   git push $* --tags
 }
 function gu() {
-  git push $* --tags
+  git pull $* --tags
 }
 function gbranch() {
   current_branch=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
