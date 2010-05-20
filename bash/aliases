@@ -27,15 +27,28 @@ alias amend="git commit --amend"
 function gp() {
   git push $* --tags
 }
+function gu() {
+  git push $* --tags
+}
 function gbranch() {
   current_branch=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 }
 function gpo() {
   # pushes the current branch; whatever that is
   gbranch
-  git push origin $current_branch --tags
+  gp origin $current_branch
 }
-alias gpom="git push origin master"
+function guo() {
+  # pushes the current branch; whatever that is
+  gbranch
+  gu origin $current_branch
+}
+function gpom() {
+  gp origin master
+}
+function guom() {
+  gu origin master
+}
 function gc() {
   git commit -a -m $1
 }
@@ -46,10 +59,6 @@ function gb() {
   git checkout -b $*
 }
 alias gl="git log"
-
-function test() {
-  cat $*
-}
 
 # mysql
 alias m="mysql"
