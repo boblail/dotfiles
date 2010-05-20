@@ -15,7 +15,7 @@ alias rst="touch tmp/restart.txt"
 # git
 alias gs="git status"
 function gc() {
-  git commit -a -m "$1"
+  git commit -a -m "$*"
 }
 
 # commands
