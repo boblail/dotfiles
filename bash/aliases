@@ -27,14 +27,16 @@ alias amend="git commit --amend"
 function gp() {
   git push $* --tags
 }
+function gbranch() {
+  current_branch=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+}
 function gpo() {
   # pushes the current branch; whatever that is
-  current_branch=$(branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
+  gbranch
   git push origin $current_branch --tags
 }
 alias gpom="git push origin master"
 function gc() {
-  #git commit -a -m "$*"
   git commit -a -m $1
 }
 function gchk() {
