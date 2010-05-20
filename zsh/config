@@ -1,6 +1,8 @@
 autoload -U colors
 colors
 setopt prompt_subst
+
+# Update the command prompt to be <current_directory> (<user>@<machine>) [git_branch]
 PROMPT='
 %~ %{$fg[white]%}(%n@%m%)$(vcprompt)%{$reset_color%}
 → '
