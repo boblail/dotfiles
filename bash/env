@@ -1,0 +1,25 @@
+# for configuring environment: paths, etc
+
+# path
+export PATH=$PATH:~/Me/bin:/usr/local/mysql/bin
+
+# TextMate is the preferred editor
+export EDITOR="mate -w"
+
+# if [[ -s /Users/bob/.rvm/scripts/rvm ]] ; then source /Users/bob/.rvm/scripts/rvm ; fi
+# test -r /sw/bin/init.sh && . /sw/bin/init.sh
+
+##
+# Your previous /Users/bob/.bash_profile file was backed up as /Users/bob/.bash_profile.macports-saved_2010-02-25_at_07:18:53
+##
+
+# Mysql
+
+alias ms=mysql
+
+# MacPorts Installer addition on 2010-02-25_at_07:18:53: adding an appropriate PATH variable for use with MacPorts.
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+# Finished adapting your PATH environment variable for use with MacPorts.
+
+
+if [[ -s "$HOME/.rvm/scripts/rvm" ]]  ; then source "$HOME/.rvm/scripts/rvm" ; fi
