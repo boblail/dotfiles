@@ -5,6 +5,7 @@
 # 
 alias h="history"
 alias ..="cd .."
+alias l="ls -al"
 
 # rails
 alias ss="./script/server"
@@ -15,10 +16,28 @@ alias rst="touch tmp/restart.txt"
 # git
 alias ga="git add ."
 alias gs="git status"
+alias gd="git diff"
+alias amend="git commit --amend"
+function gp() {
+  git push $* --tags
+}
+function gpo() {
+  git push origin $* --tags
+}
 function gc() {
-  git commit -a -m "$*"
+  git commit -a -m "$1"
+}
+function gchk() {
+  git checkout $*
+}
+function gb() {
+  git checkout -b $*
 }
 alias gl="git log"
+
+function test() {
+  cat $*
+}
 
 # commands
 alias aps="cd /var/www/apps"
