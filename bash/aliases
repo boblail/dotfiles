@@ -1,1 +1,25 @@
-# aliases and shortcuts
+#
+# shortuts
+#
+
+# 
+alias h="history"
+alias ..="cd .."
+
+# rails
+alias ss="./script/server"
+alias sc="./script/console"
+alias mig="rake db:migrate db:test:clone"
+alias rst="touch tmp/restart.txt"
+
+# git
+alias gs="git status"
+function gc() {
+  git commit -am $*
+}
+
+# commands
+alias aps="cd /var/www/apps"
+alias htm="cd /var/www/html"
+alias alr=". ~/Me/bash/aliases"
+alias als="$EDITOR ~/Me/bash/aliases && alr"
