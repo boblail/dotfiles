@@ -13,13 +13,16 @@ alias mig="rake db:migrate db:test:clone"
 alias rst="touch tmp/restart.txt"
 
 # git
+alias ga="git add ."
 alias gs="git status"
 function gc() {
   git commit -a -m "$*"
 }
+alias gl="git log"
 
 # commands
 alias aps="cd /var/www/apps"
 alias htm="cd /var/www/html"
 alias alr=". ~/Me/bash/aliases"
-alias als="$EDITOR ~/Me/bash/aliases && alr"
+alias _al="$EDITOR ~/Me/bash/aliases && alr"
+alias _me="$EDITOR ~/Me/bash"
