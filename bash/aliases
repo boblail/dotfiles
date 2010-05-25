@@ -3,37 +3,36 @@
 #
 
 # 
+alias e="$EDITOR"
 alias h="history"
 alias ..="cd .."
 alias l="ls -al"
+alias vi="vim"
 
 # rails
-function ss() {
-  ./script/server $*
-}
-function sc() {
-  ./script/server $*
-}
+alias ss="./script/server -u"
+alias sc="./script/console"
 alias mig="rake db:migrate db:test:clone"
 alias rst="touch tmp/restart.txt"
 
 # git
-function g() {
-  git checkout $*
-}
+alias g="git checkout"
 alias s="git status"
 alias ga="git add ."
 alias gd="git diff"
-function gm() {
-  git merge $*
-}
+alias gm="git merge"
 alias amend="git commit --amend"
-function gp() {
-  git push $* --tags
-}
-function gu() {
-  git pull $* --tags
-}
+alias gc="git commit -am"
+alias gf="git fetch origin"
+alias gb="git checkout -b"
+alias gp="git push --tags "
+alias gu="git pull --tags "
+#function gp() {
+#  git push $* --tags
+#}
+#function gu() {
+#  git pull $* --tags
+#}
 function gbranch() {
   current_branch=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 }
@@ -53,15 +52,15 @@ function gpom() {
 function guom() {
   gu origin master
 }
-function gc() {
-  git commit -a -m $1
-}
-function gchk() {
-  git checkout $*
-}
-function gb() {
-  git checkout -b $*
-}
+#function gc() {
+#  git commit -a -m $1
+#}=
+#function gb() {
+#  git checkout -b $*
+#}
+#function gf() {
+#  git fetch origin $*
+#}
 alias gl="git log"
 
 # mysql
@@ -71,5 +70,5 @@ alias m="mysql"
 alias aps="cd /var/www/apps"
 alias htm="cd /var/www/html"
 alias alr=". ~/Me/bash/aliases"
-alias _al="$EDITOR ~/Me/bash/aliases && alr"
-alias _me="$EDITOR ~/Me"
+alias _al="e ~/Me/bash/aliases && alr"
+alias _me="e ~/Me"
