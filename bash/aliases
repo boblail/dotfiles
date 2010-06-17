@@ -24,14 +24,19 @@ alias rst="touch tmp/restart.txt"
 alias g="git checkout"
 alias s="git status"
 alias ga="git add ."
-alias gd="git diff"
-alias gm="git merge"
-alias amend="git commit --amend"
-alias gc="git commit -am"
-alias gf="git fetch origin"
 alias gb="git checkout -b"
+alias gc="git commit -am"
+alias gd="git diff"
+alias gf="git fetch origin"
+alias gg="git log --color --pretty=format:'%cd %Cblue%h%Creset (%an) : %s' --date=short --graph"
+alias gl="git log --color --pretty=format:'%cd %Cblue%h%Creset (%an) : %s' --date=short"
+alias gm="git merge"
 alias gp="git push --tags "
 alias gu="git pull --tags "
+alias amend="git commit --amend"
+function ggrp() {
+  gl --grep=$1
+}
 function gfm() {
   gf $*
   gm FETCH_HEAD
@@ -64,7 +69,6 @@ function guom() {
 #function gf() {
 #  git fetch origin $*
 #}
-alias gl="git log"
 
 # mysql
 alias m="mysql"
