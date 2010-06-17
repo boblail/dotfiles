@@ -8,9 +8,14 @@ alias h="history"
 alias ..="cd .."
 alias l="ls -al"
 alias vi="vim"
+function rr() {
+  cd ~/Sites/$1
+}
+
 
 # rails
 alias ss="./script/server -u"
+alias ssp="ss -p"
 alias sc="./script/console"
 alias mig="rake db:migrate db:test:clone"
 alias rst="touch tmp/restart.txt"
@@ -27,12 +32,10 @@ alias gf="git fetch origin"
 alias gb="git checkout -b"
 alias gp="git push --tags "
 alias gu="git pull --tags "
-#function gp() {
-#  git push $* --tags
-#}
-#function gu() {
-#  git pull $* --tags
-#}
+function gfm() {
+  gf $*
+  gm FETCH_HEAD
+}
 function gbranch() {
   current_branch=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 }
@@ -67,6 +70,8 @@ alias gl="git log"
 alias m="mysql"
 
 # commands
+alias 360="cd ~/Sites/360"
+alias cwc="cd ~/Sites/cwc"
 alias aps="cd /var/www/apps"
 alias htm="cd /var/www/html"
 alias alr=". ~/Me/bash/aliases"
