@@ -2,27 +2,7 @@
 # shortuts
 #
 
-# 
-alias e="$EDITOR"
-alias h="history"
-alias l="ls -al"
-#alias ms="mysql"
-
-function ms() {
-  if [ -z "$1" ]; then # Is parameter #1 zero length?
-    echo "mysql"
-    mysql
-  else
-    if [ -z "$RAILS_ENV" ]; then # Is parameter #1 zero length?
-      echo "mysql $1_development"
-      mysql "$1_development"
-    else
-      echo "mysql $1_$RAILS_ENV"
-      mysql "$1_$RAILS_ENV"
-    fi
-  fi
-}
-
+# directory traversal
 function rr() {
   cd ~/Sites/$1
 }
@@ -33,7 +13,29 @@ function aps() {
     cd /var/www/apps/$1/current
   fi
 }
+alias htm="cd /var/www/html"
 
+# common utilities
+alias e="$EDITOR"
+alias h="history"
+alias l="ls -al"
+
+# mysql
+function ms() {
+  if [ -z "$1" ]; then # Is parameter #1 zero length?
+    echo "mysql"
+    mysql
+  else
+    if [ -z "$RAILS_ENV" ]; then # Is parameter #1 zero length?
+      echo "mysql $1_development"
+      mysql $1_development
+    else
+      echo "mysql $1_$RAILS_ENV"
+      mysql $1_$RAILS_ENV
+    fi
+  fi
+}
+alias m="ms"
 
 # rails
 alias ss="./script/server -u"
@@ -96,13 +98,7 @@ function guom() {
 #  git fetch origin $*
 #}
 
-# mysql
-alias m="mysql"
-
-# commands
-alias 360="cd ~/Sites/360"
-alias cwc="cd ~/Sites/cwc"
-alias htm="cd /var/www/html"
+# dotfiles
 alias alr=". ~/Me/bash/aliases"
 alias _al="e ~/Me/bash/aliases && alr"
 alias _me="e ~/Me"
