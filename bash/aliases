@@ -87,7 +87,6 @@ alias m="mysql"
 # commands
 alias 360="cd ~/Sites/360"
 alias cwc="cd ~/Sites/cwc"
-alias aps="cd /var/www/apps"
 alias htm="cd /var/www/html"
 alias alr=". ~/Me/bash/aliases"
 alias _al="e ~/Me/bash/aliases && alr"
