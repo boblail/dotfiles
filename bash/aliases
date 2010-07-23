@@ -6,13 +6,28 @@
 alias e="$EDITOR"
 alias h="history"
 alias l="ls -al"
-# alias vi="vim"
+#alias ms="mysql"
+
+function ms() {
+  if [ -z "$1" ]; then # Is parameter #1 zero length?
+    echo "mysql"
+    mysql
+  else
+    if [ -z "$RAILS_ENV" ]; then # Is parameter #1 zero length?
+      echo "mysql $1_development"
+      mysql "$1_development"
+    else
+      echo "mysql $1_$RAILS_ENV"
+      mysql "$1_$RAILS_ENV"
+    fi
+  fi
+}
+
 function rr() {
   cd ~/Sites/$1
 }
 function aps() {
-  if [ -z "$1" ] # Is parameter #1 zero length?
-  then
+  if [ -z "$1" ]; then # Is parameter #1 zero length?
     cd /var/www/apps
   else
     cd /var/www/apps/$1/current
