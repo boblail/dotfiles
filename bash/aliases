@@ -5,11 +5,18 @@
 # 
 alias e="$EDITOR"
 alias h="history"
-alias ..="cd .."
 alias l="ls -al"
 alias vi="vim"
 function rr() {
   cd ~/Sites/$1
+}
+function aps() {
+  if [ -z "$1" ] # Is parameter #1 zero length?
+  then
+    cd /var/www/apps
+  else
+    cd /var/www/apps/$1/current
+  fi
 }
 
 
@@ -85,3 +92,5 @@ alias htm="cd /var/www/html"
 alias alr=". ~/Me/bash/aliases"
 alias _al="e ~/Me/bash/aliases && alr"
 alias _me="e ~/Me"
+
+
