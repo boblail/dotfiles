@@ -6,7 +6,7 @@
 alias e="$EDITOR"
 alias h="history"
 alias l="ls -al"
-alias vi="vim"
+# alias vi="vim"
 function rr() {
   cd ~/Sites/$1
 }
