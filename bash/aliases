@@ -6,6 +6,9 @@
 function rr() {
   cd ~/Sites/$1
 }
+function rplg() {
+  cd vendor/plugins/$1
+}
 function aps() {
   if [ -z "$1" ]; then # Is parameter #1 zero length?
     cd /var/www/apps
@@ -47,9 +50,10 @@ alias rst="touch tmp/restart.txt"
 # git
 alias g="git checkout"
 alias s="git status"
-alias ga="git add ."
+alias ga="git add"
 alias gb="git checkout -b"
-alias gc="git commit -am"
+alias gc="git commit -m"
+alias gca="ga . && gc"
 alias gd="git diff"
 alias gf="git fetch origin"
 alias gl="git log --color --date=short --pretty=format:'%cd %Cblue%h%Creset (%an) : %s'"
@@ -76,6 +80,12 @@ function gpo() {
   # pushes the current branch; whatever that is
   gbranch
   gp origin $current_branch
+}
+function gpoD() {
+  # pushes the current branch; whatever that is
+  gbranch
+  gp origin $current_branch
+  epic-deploy
 }
 function guo() {
   # pushes the current branch; whatever that is
