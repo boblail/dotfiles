@@ -66,6 +66,14 @@ alias gm="git merge"
 alias gp="git push --tags "
 alias gu="git pull --tags "
 alias amend="git commit --amend"
+function gs() {
+  if [ -e $! ]; then
+    git show $1
+  else
+    gbranch
+    git show $current_branch
+  fi
+}
 function ggrp() {
   gl --grep=$1
 }
