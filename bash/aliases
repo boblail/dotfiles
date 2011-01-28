@@ -54,7 +54,6 @@ alias ga="git add"
 alias gb="git checkout -b"
 alias gc="git commit -m"
 alias gca="ga . && git commit -am"
-alias gd="git diff"
 alias gf="git fetch origin"
 alias gl="git log --color --date=short --pretty=format:'%cd %Cblue%h%Creset (%an) : %s'"
 alias glc="gl --reverse | cat"
@@ -67,11 +66,18 @@ alias gp="git push --tags "
 alias gu="git pull --tags "
 alias amend="git commit --amend"
 function gs() {
-  if [ -e $! ]; then
-    git show $1
+  if [ $1 ]; then
+    git show $*
   else
     gbranch
     git show $current_branch
+  fi
+}
+function gd() {
+  if [ $1 ]; then
+    git diff $*
+  else
+    git diff --cached
   fi
 }
 function ggrp() {
