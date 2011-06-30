@@ -40,6 +40,9 @@ function ms() {
 }
 alias m="ms"
 
+# bundler
+alias be="bundle exec"
+
 # rails
 alias ss="./script/server -u"
 alias ssp="ss -p"
