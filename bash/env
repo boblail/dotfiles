@@ -12,3 +12,6 @@ if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then source "$HOME/.rvm/scripts/rvm" ; fi
 # grep
 export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;32'
+
+# update Terminal window title
+PROMPT_COMMAND='echo -ne "\033]0;${PWD/#$HOME/~} (${USER}@${HOSTNAME%%.*})"; echo -ne "\007"'
