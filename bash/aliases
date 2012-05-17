@@ -71,6 +71,27 @@ function gf() {
   git fetch
   git checkout -b $1 origin/$1
 }
+function gdelete() {
+  git branch -D $1
+  git push origin :$1
+}
+
+# Usage:
+#   gmerge topic-branch dev
+function gmerge() {
+  g $1
+  git rebase $2
+  g $2
+  gm $1
+}
+
+# Usage:
+#   gfmerge topic-branch dev
+function gfmerge() {
+  gf $1
+  gmerge $1 $2
+}
+
 function gs() {
   if [ $1 ]; then
     git show $*
