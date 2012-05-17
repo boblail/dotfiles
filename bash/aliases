@@ -58,7 +58,6 @@ alias ga="git add"
 alias gb="git checkout -b"
 alias gc="git commit -m"
 alias gca="ga . && git commit -am"
-alias gf="git fetch origin"
 alias gl="git log --color --date=short --pretty=format:'%cd %Cblue%h%Creset (%an) : %s'"
 alias glc="gl --reverse | cat"
 alias gcommits="git shortlog -ns"
@@ -68,6 +67,10 @@ alias gm="git merge --ff-only"
 alias gp="git push --tags "
 alias gu="git pull --tags "
 alias amend="git commit --amend"
+function gf() {
+  git fetch
+  git checkout -b $1 origin/$1
+}
 function gs() {
   if [ $1 ]; then
     git show $*
