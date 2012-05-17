@@ -61,7 +61,6 @@ alias gca="ga . && git commit -am"
 alias gf="git fetch origin"
 alias gl="git log --color --date=short --pretty=format:'%cd %Cblue%h%Creset (%an) : %s'"
 alias glc="gl --reverse | cat"
-alias gls="git shortlog"
 alias gcommits="git shortlog -ns"
 alias gg="gl --graph"
 alias ggc="gg --reverse | cat"
@@ -110,21 +109,6 @@ function guo() {
   gbranch
   gu origin $current_branch
 }
-function gpom() {
-  gp origin master
-}
-function guom() {
-  gu origin master
-}
-#function gc() {
-#  git commit -a -m $1
-#}=
-#function gb() {
-#  git checkout -b $*
-#}
-#function gf() {
-#  git fetch origin $*
-#}
 
 # dotfiles
 alias alr=". ~/Me/bash/aliases"
