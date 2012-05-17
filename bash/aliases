@@ -22,6 +22,7 @@ alias htm="cd /var/www/html"
 alias e="$EDITOR"
 alias h="history"
 alias l="ls -al"
+alias p="powder"
 
 # mysql
 function ms() {
