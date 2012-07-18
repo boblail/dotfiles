@@ -50,6 +50,16 @@ alias ssp="ss -p"
 alias sc="./script/console"
 alias mig="rake db:migrate db:test:clone"
 alias rst="touch tmp/restart.txt"
+function tl() {
+  if [ -z "$RAILS_ENV" ]; then
+    echo "tail -f log/development.log"
+    tail -f log/development.log
+  else
+    echo "tail -f log/$RAILS_ENV.log"
+    tail -f log/$RAILS_ENV.log
+  fi
+}
+
 
 # git
 alias g="git checkout"
