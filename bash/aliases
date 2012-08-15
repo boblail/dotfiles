@@ -144,6 +144,22 @@ function guo() {
   gu origin $current_branch
 }
 
+function pull() {
+  gpo
+  
+  gbranch
+  title="Put%20the%20ticket%20name%20and%20number%20here"
+  if [[ "$current_branch" =~ ^ticket-([0-9]{1,6})$ ]]
+  then
+    ticket_number=${BASH_REMATCH[${#BASH_REMATCH[@]}-1]}
+    title="Describe%20your%20changes%20%5B%23$ticket_number%5D"
+  fi
+  
+  repo=${PWD##*/}
+  open "https://github.com/concordia-publishing-house/$repo/pull/new/$current_branch?title=$title"
+}
+
+
 # dotfiles
 alias alr=". ~/Me/bash/aliases"
 alias _al="e ~/Me/bash/aliases && alr"
