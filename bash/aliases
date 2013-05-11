@@ -18,6 +18,7 @@ function aps() {
 alias e="$EDITOR"
 alias l="ls -alG"
 alias p="powder"
+alias rb="rbenv"
 
 # mysql
 function ms() {
