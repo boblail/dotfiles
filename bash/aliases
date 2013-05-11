@@ -6,9 +6,6 @@
 function rr() {
   cd ~/Sites/$1
 }
-function rplg() {
-  cd vendor/plugins/$1
-}
 function aps() {
   if [ -z "$1" ]; then # Is parameter #1 zero length?
     cd /var/www/apps
@@ -45,9 +42,6 @@ alias m="ms"
 alias be="bundle exec"
 
 # rails
-alias ss="./script/server -u"
-alias ssp="ss -p"
-alias sc="./script/console"
 alias mig="rake db:migrate db:test:clone"
 alias rst="touch tmp/restart.txt"
 function tl() {
