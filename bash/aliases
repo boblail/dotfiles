@@ -13,12 +13,9 @@ function aps() {
     cd /var/www/apps/$1/current
   fi
 }
-alias htm="cd /var/www/html"
 
 # common utilities
 alias e="$EDITOR"
-alias h="history"
-alias l="ls -al"
 alias p="powder"
 
 # mysql
@@ -42,7 +39,6 @@ alias m="ms"
 alias be="bundle exec"
 
 # rails
-alias mig="rake db:migrate db:test:clone"
 alias rst="touch tmp/restart.txt"
 function tl() {
   if [ -z "$RAILS_ENV" ]; then
@@ -63,10 +59,7 @@ alias gb="git checkout -b"
 alias gc="git commit -m"
 alias gca="ga . && git commit -am"
 alias gl="git log --color --date=short --pretty=format:'%cd %Cblue%h%Creset (%an) : %s'"
-alias glc="gl --reverse | cat"
 alias gcommits="git shortlog -ns"
-alias gg="gl --graph"
-alias ggc="gg --reverse | cat"
 alias gm="git merge --ff-only"
 alias gp="git push --tags "
 alias gu="git pull --tags "
@@ -125,12 +118,6 @@ function gpo() {
   # pushes the current branch; whatever that is
   gbranch
   gp origin $current_branch
-}
-function gpoD() {
-  # pushes the current branch; whatever that is
-  gbranch
-  gp origin $current_branch
-  epic-deploy
 }
 function guo() {
   # pushes the current branch; whatever that is
