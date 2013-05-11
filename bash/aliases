@@ -16,6 +16,7 @@ function aps() {
 
 # common utilities
 alias e="$EDITOR"
+alias l="ls -alG"
 alias p="powder"
 
 # mysql
