@@ -3,10 +3,7 @@
 # path
 export PATH=~/Me/bin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:$PATH
 
-# macports
-export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-
-# RVM
+# RVM (if present)
 if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then source "$HOME/.rvm/scripts/rvm" ; fi
 
 # grep
