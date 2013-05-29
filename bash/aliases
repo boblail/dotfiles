@@ -41,8 +41,9 @@ alias gt="gittower"
 # common utilities
 alias e="$EDITOR"
 alias l="ls -alG"
-alias rb="rbenv"
 alias p="psql -hlocalhost"
+alias rb="rbenv local"
+alias rb-="rbenv local --unset"
 
 # mysql
 function ms() {
