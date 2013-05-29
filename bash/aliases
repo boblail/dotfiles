@@ -87,11 +87,12 @@ alias ga="git add"
 alias gb="git checkout -b"
 alias gc="git commit -m"
 alias gca="ga . && git commit -am"
-alias gl="git log --color --date=short --pretty=format:'%cd %Cblue%h%Creset (%an) : %s'"
+alias gl="git log --color --date=short --format=format:'%C(green)%cd %C(cyan)%h %C(blue)(%an)%C(reset) : %s'"
 alias gcommits="git shortlog -ns"
 alias gm="git merge --ff-only"
 alias gp="git push --tags "
 alias gu="git pull --tags "
+alias gg="git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(cyan)%h %C(green)(%ar) %C(yellow)%d %C(reset)%s %C(blue)(%an)%C(reset)' --all"
 alias amend="git commit --amend"
 function gf() {
   git fetch
