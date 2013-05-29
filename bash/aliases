@@ -14,6 +14,30 @@ function aps() {
   fi
 }
 
+# speed up opening a directory in TextMate
+
+alias mate.="mate ."
+function tm {
+  if [[ $# > 0 ]]; then
+    mate $@
+  else
+    mate .
+  fi
+}
+
+# speed up opening a repo in Git Tower
+
+alias gittower.="gittower ."
+function tower {
+  if [[ $# > 0 ]]; then
+    gittower $@
+  else
+    gittower .
+  fi
+}
+alias gt="gittower"
+
+
 # common utilities
 alias e="$EDITOR"
 alias l="ls -alG"
