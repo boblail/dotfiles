@@ -6,6 +6,7 @@
 function rr() {
   cd ~/Sites/$1
 }
+
 function aps() {
   if [ -z "$1" ]; then # Is parameter #1 zero length?
     cd /var/www/apps
@@ -39,6 +40,8 @@ alias gt="gittower"
 
 
 # common utilities
+alias b="bundle"
+alias be="bundle exec"
 alias e="$EDITOR"
 alias l="ls -alG"
 alias p="psql -hlocalhost"
@@ -64,11 +67,12 @@ function ms() {
 }
 alias m="ms"
 
-# bundler
-alias be="bundle exec"
-
 # rails
 alias rst="touch tmp/restart.txt"
+alias brs="bundle exec rails s"
+alias brc="bundle exec rails c"
+alias brg="bundle exec rails g"
+alias migrate="bundle exec rake db:migrate"
 function tl() {
   if [ -z "$RAILS_ENV" ]; then
     echo "tail -f log/development.log"
@@ -78,7 +82,6 @@ function tl() {
     tail -f log/$RAILS_ENV.log
   fi
 }
-
 
 # git
 alias g="git checkout"
@@ -93,6 +96,8 @@ alias gm="git merge --ff-only"
 alias gp="git push --tags "
 alias gu="git pull --tags "
 alias gg="git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(cyan)%h %C(green)(%ar) %C(yellow)%d %C(reset)%s %C(blue)(%an)%C(reset)' --all"
+alias branches="git branch -a"
+
 alias amend="git commit --amend"
 function gf() {
   git fetch
