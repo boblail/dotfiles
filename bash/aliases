@@ -45,6 +45,8 @@ alias p="psql -hlocalhost"
 alias rb="rbenv local"
 alias rb-="rbenv local --unset"
 
+alias history-top='history | awk '"'"'{print $2}'"'"' | awk '"'"'BEGIN {FS="|"}{print $1}'"'"' | sort | uniq -c | sort -n | tail -n15 | sort -nr'
+
 # mysql
 function ms() {
   if [ -z "$1" ]; then # Is parameter #1 zero length?
