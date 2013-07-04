@@ -97,6 +97,8 @@ alias gp="git push --tags "
 alias gu="git pull --tags "
 alias gg="git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(cyan)%h %C(green)(%ar) %C(yellow)%d %C(reset)%s %C(blue)(%an)%C(reset)' --all"
 alias branches="git branch -a"
+alias test="be rake test"
+alias test:all="be rake test:all"
 
 alias amend="git commit --amend"
 function gf() {
