@@ -99,6 +99,8 @@ alias gg="git log --graph --abbrev-commit --decorate --date=relative --format=fo
 alias branches="git branch -a"
 alias test="be rake test"
 alias test:all="be rake test:all"
+alias s3='s3cmd'
+alias h='heroku'
 
 alias amend="git commit --amend"
 function gf() {
