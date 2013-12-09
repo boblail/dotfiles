@@ -209,6 +209,11 @@ function gpo() {
   gbranch
   gp origin $current_branch
 }
+function gpo!() {
+  # pushes the current branch; whatever that is
+  gbranch
+  gp -f origin $current_branch
+}
 function guo() {
   # pushes the current branch; whatever that is
   gbranch
