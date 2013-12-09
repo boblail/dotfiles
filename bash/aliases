@@ -123,13 +123,13 @@ function gfmerge() {
 
 # Git Fetch
 function gf() {
-  echo -e "\033[30;1mgit fetch\033[0m"
+  shadowprint "git fetch"
   git fetch
   
   # If the branch exists, delete it to be sure we've got the latest
   git show-branch $1 &> /dev/null && gdelete $1
   
-  echo -e "\033[30;1mgit checkout -b $1 origin/$1\033[0m"
+  shadowprint "git checkout -b $1 origin/$1"
   git checkout -b $1 origin/$1
 }
 
@@ -138,13 +138,13 @@ function gdelete!() {
   # If the local branch exists, delete it too
   git show-branch $1 &> /dev/null && gdelete $1
 
-  echo -e "\033[30;1mgit push origin :$1\033[0m"
+  shadowprint "git push origin :$1"
   git push origin :$1
 }
 
 # Git Delete the branch locally
 function gdelete() {
-  echo -e "\033[30;1mgit branch -D $1\033[0m"
+  shadowprint "git branch -D $1"
   git branch -D $1
 }
 
@@ -163,18 +163,22 @@ function gmerge() {
   if [ -z "$1" ]; then # Is parameter #1 zero length?
     echo "USAGE: gmerge topic-branch [dev]"
   else
-    echo -e "\033[30;1mgit checkout $1\033[0m"
+    shadowprint "git checkout $1"
     git checkout $1 || { exit 1; }
     
-    echo -e "\033[30;1mgit rebase ${2:-dev}\033[0m"
+    shadowprint "git rebase ${2:-dev}"
     git rebase ${2:-dev} || { exit 1; }
     
-    echo -e "\033[30;1mgit checkout ${2:-dev}\033[0m"
+    shadowprint "git checkout ${2:-dev}"
     git checkout ${2:-dev} || { exit 1; }
     
-    echo -e "\033[30;1mgit merge --ff-only $1\033[0m"
+    shadowprint "git merge --ff-only $1"
     git merge --ff-only $1 || { exit 1; }
   fi
+}
+
+function shadowprint() {
+  echo -e "\033[30;1m$1\033[0m"
 }
 
 
