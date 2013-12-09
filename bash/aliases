@@ -106,30 +106,78 @@ alias s3='s3cmd'
 alias h='heroku'
 
 alias amend="git commit --amend"
-function gf() {
-  git fetch
-  git checkout -b $1 origin/$1
-}
-function gdelete() {
-  git branch -D $1
-  git push origin :$1
+
+
+
+# Git Fetch and Merge; delete the branch upon success
+function gfmerge!() {
+  gf $1
+  gmerge! $1 $2
 }
 
-# Usage:
-#   gmerge topic-branch dev
-function gmerge() {
-  g $1
-  git rebase $2
-  g $2
-  gm $1
-}
-
-# Usage:
-#   gfmerge topic-branch dev
+# Git Fetch and Merge
 function gfmerge() {
   gf $1
   gmerge $1 $2
 }
+
+# Git Fetch
+function gf() {
+  echo -e "\033[30;1mgit fetch\033[0m"
+  git fetch
+  
+  # If the branch exists, delete it to be sure we've got the latest
+  git show-branch $1 &> /dev/null && gdelete $1
+  
+  echo -e "\033[30;1mgit checkout -b $1 origin/$1\033[0m"
+  git checkout -b $1 origin/$1
+}
+
+# Git Delete the branch remotely and locally
+function gdelete!() {
+  # If the local branch exists, delete it too
+  git show-branch $1 &> /dev/null && gdelete $1
+
+  echo -e "\033[30;1mgit push origin :$1\033[0m"
+  git push origin :$1
+}
+
+# Git Delete the branch locally
+function gdelete() {
+  echo -e "\033[30;1mgit branch -D $1\033[0m"
+  git branch -D $1
+}
+
+# Git Merge; delete the branch upon success
+function gmerge!() {
+  if [ -z "$1" ]; then # Is parameter #1 zero length?
+    echo "USAGE: gmerge! topic-branch [dev]"
+  else
+    gmerge $1 $2 || { exit 1; }
+    gdelete! $1
+  fi
+}
+
+# Git Merge: rebases topic branch before merging
+function gmerge() {
+  if [ -z "$1" ]; then # Is parameter #1 zero length?
+    echo "USAGE: gmerge topic-branch [dev]"
+  else
+    echo -e "\033[30;1mgit checkout $1\033[0m"
+    git checkout $1 || { exit 1; }
+    
+    echo -e "\033[30;1mgit rebase ${2:-dev}\033[0m"
+    git rebase ${2:-dev} || { exit 1; }
+    
+    echo -e "\033[30;1mgit checkout ${2:-dev}\033[0m"
+    git checkout ${2:-dev} || { exit 1; }
+    
+    echo -e "\033[30;1mgit merge --ff-only $1\033[0m"
+    git merge --ff-only $1 || { exit 1; }
+  fi
+}
+
+
 
 function gs() {
   if [ $1 ]; then
