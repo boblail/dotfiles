@@ -99,7 +99,7 @@ alias gm="git merge --ff-only"
 alias gp="git push --tags "
 alias gu="git pull --tags "
 alias gg="git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(cyan)%h %C(green)%ad %C(yellow)%d %C(reset)%s %C(blue)(%an)%C(reset)' --all"
-alias branches="git branch -a"
+alias gbr="git branch"
 alias test="be rake test"
 alias test:all="be rake test:all"
 alias s3='s3cmd'
