@@ -153,7 +153,7 @@ function gmerge!() {
   if [ -z "$1" ]; then # Is parameter #1 zero length?
     echo "USAGE: gmerge! topic-branch [dev]"
   else
-    gmerge $1 $2 || { exit 1; }
+    gmerge $1 $2 || { return 1; }
     gdelete! $1
   fi
 }
@@ -164,16 +164,16 @@ function gmerge() {
     echo "USAGE: gmerge topic-branch [dev]"
   else
     shadowprint "git checkout $1"
-    git checkout $1 || { exit 1; }
+    git checkout $1 || { return 1; }
     
     shadowprint "git rebase ${2:-dev}"
-    git rebase ${2:-dev} || { exit 1; }
+    git rebase ${2:-dev} || { return 1; }
     
     shadowprint "git checkout ${2:-dev}"
-    git checkout ${2:-dev} || { exit 1; }
+    git checkout ${2:-dev} || { return 1; }
     
     shadowprint "git merge --ff-only $1"
-    git merge --ff-only $1 || { exit 1; }
+    git merge --ff-only $1 || { return 1; }
   fi
 }
 
