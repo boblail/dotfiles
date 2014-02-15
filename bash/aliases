@@ -2,19 +2,6 @@
 # shortuts
 #
 
-# directory traversal
-function rr() {
-  cd ~/Sites/$1
-}
-
-function aps() {
-  if [ -z "$1" ]; then # Is parameter #1 zero length?
-    cd /var/www/apps
-  else
-    cd /var/www/apps/$1/current
-  fi
-}
-
 # speed up opening a directory in TextMate
 
 alias mate.="mate ."
