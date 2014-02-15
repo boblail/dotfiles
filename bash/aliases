@@ -106,10 +106,8 @@ alias s3='s3cmd'
 alias h='heroku'
 
 function commitsnipe() {
-  name=`git config --global --get user.name`
-  email=`git config --global --get user.email`
-  shadowprint "git commit --amend --no-edit --author='$name <$email>'"
-  git commit --amend --no-edit --author="$name <$email>"
+  shadowprint "git commit --amend --no-edit --reset-author"
+  git commit --amend --no-edit --reset-author
 }
 
 alias amend="git commit --amend"
