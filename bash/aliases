@@ -115,14 +115,19 @@ function gfmerge() {
 
 # Git Fetch
 function gf() {
-  shadowprint "git fetch"
-  git fetch
-  
-  # If the branch exists, delete it to be sure we've got the latest
-  git show-branch $1 &> /dev/null && gdelete $1
-  
-  shadowprint "git checkout -b $1 origin/$1"
-  git checkout -b $1 origin/$1
+  if [[ $# > 0 ]]; then
+    shadowprint "git fetch"
+    git fetch
+    
+    # If the branch exists, delete it to be sure we've got the latest
+    git show-branch $1 &> /dev/null && gdelete $1
+    
+    shadowprint "git checkout -b $1 origin/$1"
+    git checkout -b $1 origin/$1
+  else
+    shadowprint "git fetch --prune"
+    git fetch --prune
+  fi
 }
 
 # Git Delete the branch remotely and locally
