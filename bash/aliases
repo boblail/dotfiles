@@ -175,7 +175,7 @@ function gmerge() {
 }
 
 function shadowprint() {
-  echo -e "\033[30;1m$1\033[0m"
+  echo -e "\033[90m$1\033[0m"
 }
 
 
