@@ -5,25 +5,40 @@
 # speed up opening a directory in TextMate
 
 alias mate.="mate ."
+
 function tm {
   if [[ $# > 0 ]]; then
     mate $@
   else
-    mate .
+    if [[ "$(pwd)" == "/Users/lailrc" ]]; then
+      echo -e "\033[31mYou don't want to do this!\033[0m"
+      return
+    fi
+    if [[ "$(pwd)" == "/Users/lailrc/Sites" ]]; then
+      echo -e "\033[31mYou don't want to do this!\033[0m"
+      return
+    fi
+
+   mate .
   fi
 }
 
-# speed up opening a repo in Git Tower
-
-alias gittower.="gittower ."
-function tower {
+function gt {
   if [[ $# > 0 ]]; then
     gittower $@
   else
-    gittower .
+    if [[ "$(pwd)" == "/Users/lailrc" ]]; then
+      echo -e "\033[31mYou don't want to do this!\033[0m"
+      return
+    fi
+    if [[ "$(pwd)" == "/Users/lailrc/Sites" ]]; then
+      echo -e "\033[31mYou don't want to do this!\033[0m"
+      return
+    fi
+
+   gittower .
   fi
 }
-alias gt="gittower"
 
 
 # common utilities
@@ -35,6 +50,11 @@ alias l="ls -l"
 alias p="psql -hlocalhost"
 alias rb="rbenv local"
 alias rb-="rbenv local --unset"
+alias t+="ep tasks add"
+alias tl="ep tasks list"
+alias star="ep star"
+alias st="ep star"
+alias sprint="ep tasks list sprint"
 
 alias history-top='history | awk '"'"'{print $2}'"'"' | awk '"'"'BEGIN {FS="|"}{print $1}'"'"' | sort | uniq -c | sort -n | tail -n15 | sort -nr'
 
@@ -61,7 +81,7 @@ alias brs="bundle exec rails s"
 alias brc="bundle exec rails c"
 alias brg="bundle exec rails g"
 alias migrate="bundle exec rake db:migrate"
-function tl() {
+function logs() {
   if [ -z "$RAILS_ENV" ]; then
     echo "tail -f log/development.log"
     tail -f log/development.log
@@ -79,6 +99,9 @@ alias gb="git checkout -b"
 alias gc="git commit -m"
 alias gc0="git commit --allow-empty -m"
 alias gca="ga . && git commit -am"
+alias gss="git stash save -u"
+alias gsp="git stash pop"
+alias grc="git rebase --continue"
 alias gl="git log --color --date=relative --format=format:'%C(cyan)%h%C(reset) %C(green)%ad %C(blue)(%an)%C(reset) %C(yellow)%d %C(reset)%s'"
 alias gl1="gl -1 | cat"
 alias gcommits="git shortlog -ns"
@@ -87,6 +110,7 @@ alias gp="git push --tags "
 alias gu="git pull --ff-only --tags "
 alias gg="git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(cyan)%h %C(green)%ad %C(yellow)%d %C(reset)%s %C(blue)(%an)%C(reset)' --all"
 alias gbr="git branch"
+alias gtrsh="git checkout --"
 alias test="be rake test"
 alias test:all="be rake test:all"
 alias s3='s3cmd'
@@ -97,7 +121,7 @@ function commitsnipe() {
   git commit --amend --no-edit --reset-author
 }
 
-alias amend="git commit --amend"
+alias amend="SKIP_HOOKUP=TRUE git commit --amend"
 
 
 
@@ -118,10 +142,10 @@ function gf() {
   if [[ $# > 0 ]]; then
     shadowprint "git fetch"
     git fetch
-    
+
     # If the branch exists, delete it to be sure we've got the latest
     git show-branch $1 &> /dev/null && gdelete $1
-    
+
     shadowprint "git checkout -b $1 origin/$1"
     git checkout -b $1 origin/$1
   else
@@ -162,13 +186,13 @@ function gmerge() {
   else
     shadowprint "git checkout $1"
     git checkout $1 || { return 1; }
-    
+
     shadowprint "git rebase ${2:-dev}"
     git rebase ${2:-dev} || { return 1; }
-    
+
     shadowprint "git checkout ${2:-dev}"
     git checkout ${2:-dev} || { return 1; }
-    
+
     shadowprint "git merge --ff-only $1"
     git merge --ff-only $1 || { return 1; }
   fi
@@ -213,7 +237,7 @@ function gpo() {
 function gpo!() {
   # pushes the current branch; whatever that is
   gbranch
-  gp -f origin $current_branch
+  gp -f --no-verify origin $current_branch
 }
 function guo() {
   # pushes the current branch; whatever that is
@@ -223,7 +247,7 @@ function guo() {
 
 function pull() {
   gpo
-  
+
   gbranch
   title="Put%20the%20ticket%20name%20and%20number%20here"
   if [[ "$current_branch" =~ ^ticket-([0-9]{1,6})$ ]]
@@ -231,7 +255,7 @@ function pull() {
     ticket_number=${BASH_REMATCH[${#BASH_REMATCH[@]}-1]}
     title="Describe%20your%20changes%20%5B%23$ticket_number%5D"
   fi
-  
+
   repo=${PWD##*/}
   open "https://github.com/concordia-publishing-house/$repo/pull/new/$current_branch?title=$title"
 }
@@ -241,5 +265,3 @@ function pull() {
 alias alr=". ~/Me/bash/aliases"
 alias _al="e ~/Me/bash/aliases && alr"
 alias _me="e ~/Me"
-
-
