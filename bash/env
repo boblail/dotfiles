@@ -3,8 +3,8 @@
 # path
 export PATH=~/Me/bin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:$PATH
 
-# RVM (if present)
-if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then source "$HOME/.rvm/scripts/rvm" ; fi
+# CD
+export CDPATH=.:~:~/Sites:~/Code
 
 # grep
 export GREP_OPTIONS='--color=auto'
