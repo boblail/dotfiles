@@ -1,79 +1,17 @@
-#
-# shortuts
-#
-
-# speed up opening a directory in TextMate
-
-alias mate.="mate ."
-
-function tm {
-  if [[ $# > 0 ]]; then
-    mate $@
-  else
-    if [[ "$(pwd)" == "/Users/lailrc" ]]; then
-      echo -e "\033[31mYou don't want to do this!\033[0m"
-      return
-    fi
-    if [[ "$(pwd)" == "/Users/lailrc/Sites" ]]; then
-      echo -e "\033[31mYou don't want to do this!\033[0m"
-      return
-    fi
-
-   mate .
-  fi
-}
-
-function gt {
-  if [[ $# > 0 ]]; then
-    gittower $@
-  else
-    if [[ "$(pwd)" == "/Users/lailrc" ]]; then
-      echo -e "\033[31mYou don't want to do this!\033[0m"
-      return
-    fi
-    if [[ "$(pwd)" == "/Users/lailrc/Sites" ]]; then
-      echo -e "\033[31mYou don't want to do this!\033[0m"
-      return
-    fi
-
-   gittower .
-  fi
-}
-
-
-# common utilities
+# bundler
 alias b="bundle"
 alias be="bundle exec"
-alias e="$EDITOR"
+
+# ls
 alias ls="ls -G"
 alias l="ls -l"
+
+# psql
 alias p="psql -hlocalhost"
+
+# rbenv
 alias rb="rbenv local"
 alias rb-="rbenv local --unset"
-alias t+="ep tasks add"
-alias tl="ep tasks list"
-alias star="ep star"
-alias st="ep star"
-alias sprint="ep tasks list sprint"
-
-alias history-top='history | awk '"'"'{print $2}'"'"' | awk '"'"'BEGIN {FS="|"}{print $1}'"'"' | sort | uniq -c | sort -n | tail -n15 | sort -nr'
-
-# mysql
-function ms() {
-  if [ -z "$1" ]; then # Is parameter #1 zero length?
-    echo "mysql"
-    mysql
-  else
-    if [ -z "$RAILS_ENV" ]; then # Is parameter #1 zero length?
-      echo "mysql $1_development"
-      mysql $1_development
-    else
-      echo "mysql $1_$RAILS_ENV"
-      mysql $1_$RAILS_ENV
-    fi
-  fi
-}
-alias m="ms"
 
 # rails
 alias rst="touch tmp/restart.txt"
@@ -81,15 +19,11 @@ alias brs="bundle exec rails s"
 alias brc="bundle exec rails c"
 alias brg="bundle exec rails g"
 alias migrate="bundle exec rake db:migrate"
-function logs() {
-  if [ -z "$RAILS_ENV" ]; then
-    echo "tail -f log/development.log"
-    tail -f log/development.log
-  else
-    echo "tail -f log/$RAILS_ENV.log"
-    tail -f log/$RAILS_ENV.log
-  fi
-}
+alias test="be rake test"
+alias test:all="be rake test:all"
+
+# s3cmd
+alias s3='s3cmd'
 
 # git
 alias g="git checkout"
@@ -111,10 +45,7 @@ alias gu="git pull --ff-only --tags "
 alias gg="git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(cyan)%h %C(green)%ad %C(yellow)%d %C(reset)%s %C(blue)(%an)%C(reset)'"
 alias gbr="git branch"
 alias gtrsh="git checkout --"
-alias test="be rake test"
-alias test:all="be rake test:all"
-alias s3='s3cmd'
-alias h='heroku'
+alias gcopy='gl --pretty="%s" -1 | pbcopy'
 
 function commitsnipe() {
   shadowprint "git commit --amend --no-edit --reset-author"
@@ -122,8 +53,6 @@ function commitsnipe() {
 }
 
 alias amend="SKIP_HOOKUP=TRUE git commit --amend"
-
-
 
 # Git Fetch and Merge; delete the branch upon success
 function gfmerge!() {
@@ -202,8 +131,6 @@ function shadowprint() {
   echo -e "\033[90m$1\033[0m"
 }
 
-
-
 function gs() {
   if [ $1 ]; then
     git show $*
@@ -212,6 +139,7 @@ function gs() {
     git show $current_branch
   fi
 }
+
 function gd() {
   if [ $1 ]; then
     git diff $*
@@ -219,49 +147,34 @@ function gd() {
     git diff --cached
   fi
 }
+
 function ggrp() {
   gl --grep=$1
 }
+
 function gfm() {
   gf $*
   gm FETCH_HEAD
 }
+
 function gbranch() {
   current_branch=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 }
+
 function gpo() {
   # pushes the current branch; whatever that is
   gbranch
   gp origin $current_branch
 }
+
 function gpo!() {
   # pushes the current branch; whatever that is
   gbranch
   gp -f --no-verify origin $current_branch
 }
+
 function guo() {
   # pushes the current branch; whatever that is
   gbranch
   gu origin $current_branch
 }
-
-function pull() {
-  gpo
-
-  gbranch
-  title="Put%20the%20ticket%20name%20and%20number%20here"
-  if [[ "$current_branch" =~ ^ticket-([0-9]{1,6})$ ]]
-  then
-    ticket_number=${BASH_REMATCH[${#BASH_REMATCH[@]}-1]}
-    title="Describe%20your%20changes%20%5B%23$ticket_number%5D"
-  fi
-
-  repo=${PWD##*/}
-  open "https://github.com/concordia-publishing-house/$repo/pull/new/$current_branch?title=$title"
-}
-
-
-# dotfiles
-alias alr=". ~/Me/bash/aliases"
-alias _al="e ~/Me/bash/aliases && alr"
-alias _me="e ~/Me"
