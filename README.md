@@ -1,21 +1,13 @@
-# Bob Lail's dotfiles
+# EP's dotfiles
+
+These aliases and Bash functions are for all EP laptops on VMs.
 
 ### Installing
 
 ```
-git clone git@github.com:boblail/dotfiles.git ./Me
-cd Me/src/vcprompt-07f110976599 && make && cd -
+git clone git@github.com:cph/dotfiles.git ./dotfiles
+cd dotfiles/src/vcprompt-07f110976599 && make && cd -
 ```
 
-Add `. ~/Me/bashrc` to `~/.bashrc`
-Add `. ~/Me/bash_profile` to `~/.profile`
-
-Open iTerm's Preferences, and select **Load preferences from a custom folder or URL** and fill in `~/Me/iterm2`
-
-##### Atom Theme
-
-To make the Solarcasts Theme available in Atom, do:
-
-```
-apm link ~/Me/atom/solarcasts-theme-syntax
-```
+Add `. ~/dotfiles/bashrc` to `~/.bashrc`
+Add `. ~/dotfiles/bash_profile` to `~/.profile`
