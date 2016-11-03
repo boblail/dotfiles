@@ -1,10 +1,7 @@
 # for configuring environment: paths, etc
 
 # path
-export PATH=~/Me/bin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:$PATH
-
-# CD
-export CDPATH=.:~:~/Sites:~/Code
+export PATH=$DOTFILES_PATH/bin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:$PATH
 
 # grep
 export GREP_OPTIONS='--color=auto'
