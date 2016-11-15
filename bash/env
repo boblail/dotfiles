@@ -1,7 +1,7 @@
 # for configuring environment: paths, etc
 
 # path
-export PATH=$DOTFILES_PATH/bin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:$PATH
+export PATH=$DOTFILES_PATH/bin:$PATH
 
 # grep
 export GREP_OPTIONS='--color=auto'
