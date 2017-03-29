@@ -1,0 +1,3 @@
+# Update the command prompt to be <current_directory> (<user>@<machine>) [git_branch]
+# Note that the git branch is given a special color
+PS1="\n\e[1m\w\e[m (\u@\h) \$(vcprompt) \n→ "
