@@ -43,7 +43,7 @@ svn_get_info(vccontext_t* context)
                 // Get the revision number
                 if (fgets(line, sizeof(line), fp)) {
                     chop_newline(line);
-                    result->revision = strdup(line);
+                    strcpy(result->revision, line);
                     debug("read a svn revision from .svn/entries: '%s'", line);
                 }
                 else {
@@ -54,7 +54,7 @@ svn_get_info(vccontext_t* context)
             }
             else {
                 // XML file format (working copy created by svn < 1.4)
-                char* rev = calloc(100, sizeof(char)); /* XXX leak */
+                char* rev = calloc(100, sizeof(char));
                 char* marker = "revision=";
                 char* p = NULL;
                 while (fgets(line, sizeof(line), fp))
@@ -65,9 +65,10 @@ svn_get_info(vccontext_t* context)
                     return NULL;
                 }
                 if (sscanf(p, " %*[^\"]\"%[0-9]\"", rev) == 1) {
-                    result->revision = rev;
+                    strcpy(result->revision, rev);
                     debug("read svn revision from .svn/entries: '%s'", rev);
                 }
+                free(rev);
             }
         }
         fclose(fp);

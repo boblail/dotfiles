@@ -1,6 +1,8 @@
 #ifndef VCPROMPT_H
 #define VCPROMPT_H
 
+#include <sys/param.h>
+
 typedef struct {
     int debug;
     char* format;                       /* e.g. "[%b%u%m]" */
@@ -11,8 +13,8 @@ typedef struct {
 } options_t;
 
 typedef struct {
-    char* branch;                       /* name of current branch */
-    char* revision;                     /* current revision */
+    char branch[MAXPATHLEN];            /* name of current branch */
+    char revision[MAXPATHLEN];          /* current revision */
     int unknown;                        /* any unknown files? */
     int modified;                       /* any local changes? */
 } result_t;

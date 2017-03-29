@@ -14,9 +14,11 @@ hg_get_info(vccontext_t* context)
     result_t* result = init_result();
     char buf[1024];
 
+    memcpy(buf, 0, strlen(buf));
+
     if (read_first_line(".hg/branch", buf, 1024)) {
         debug("read first line from .hg/branch: '%s'", buf);
-        result->branch = strdup(buf);   /* XXX mem leak */
+        strcpy(result->branch, buf);
     }
     else {
         debug("failed to read from .hg/branch: assuming not an hg repo");
