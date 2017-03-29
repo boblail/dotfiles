@@ -35,6 +35,7 @@ void parse_format(options_t* options)
     options->show_branch = 0;
     options->show_unknown = 0;
     options->show_modified = 0;
+    options->show_submodule = 0;
 
     char* format = options->format;
     for (i = 0; i < strlen(format); i++) {
@@ -54,6 +55,9 @@ void parse_format(options_t* options)
                     break;
                 case 'm':
                     options->show_modified = 1;
+                    break;
+                case 's':
+                    options->show_submodule = 1;
                     break;
                 case 'n':               /* name of VC system */
                 case '%':
@@ -82,11 +86,11 @@ void print_result(vccontext_t* context, options_t* options, result_t* result)
                     putc('%', stdout);
                     break;
                 case 'b':
-                    if (result->branch != NULL)
+                    if (strlen(result->branch) > 0)
                         fputs(result->branch, stdout);
                     break;
                 case 'r':
-                    if (result->revision != NULL)
+                    if (strlen(result->revision) > 0)
                         fputs(result->revision, stdout);
                     break;
                 case 'u':
@@ -96,6 +100,10 @@ void print_result(vccontext_t* context, options_t* options, result_t* result)
                 case 'm':
                     if (result->modified)
                         putc('!', stdout);
+                    break;
+                case 's':
+                    if (result->submodule)
+                        fputs("? (sub)", stdout);
                     break;
                 case 'n':
                     fputs(context->name, stdout);
@@ -149,11 +157,12 @@ vccontext_t* probe_parents(vccontext_t** contexts, int num_contexts)
 
 int main(int argc, char** argv)
 {
-    options_t options = { 0,            /* debug */
-                          "[%n:%b%m%u] ",  /* format string */
-                          0,            /* show branch */
-                          0,            /* show unknown */
-                          0,            /* show local changes */
+    options_t options = { 0,              /* debug */
+                          "[%n:%b%m%u%s] ", /* format string */
+                          0,              /* show branch */
+                          0,              /* show unknown */
+                          0,              /* show local changes */
+                          0,              /* indicate if cwd is in a submodule */
     };
 
     parse_args(argc, argv, &options);
