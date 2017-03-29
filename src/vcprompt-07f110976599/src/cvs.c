@@ -17,19 +17,21 @@ cvs_get_info(vccontext_t* context)
     result_t* result = init_result();
     char buf[1024];
 
+    memcpy(buf, 0, strlen(buf));
+
     if (!read_first_line("CVS/Tag", buf, 1024)) {
         debug("unable to read CVS/Tag: assuming trunk");
-        result->branch = "trunk";
+        strcpy(result->branch, "trunk");
     }
     else {
         debug("read first line of CVS/Tag: '%s'", buf);
         if (buf[0] == 'T') {
             /* there is a sticky tag and it's a branch tag */
-            result->branch = strdup(buf+1); /* XXX mem leak! */
+            strcpy(result->branch, buf);
         }
         else {
-            /* non-branch sticky tag or sticky date */            
-            result->branch = "(unknown)";
+            /* non-branch sticky tag or sticky date */
+            strcpy(result->branch, "(unknown)");
         }
     }
     return result;

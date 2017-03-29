@@ -1,5 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/param.h>
 #include "git.h"
 
 static int
@@ -26,10 +29,15 @@ git_get_info(vccontext_t* context)
             /* yep, we're on a known branch */
             debug("read a head ref from .git/HEAD: '%s'", buf);
             result->branch = strdup(buf+prefixlen); /* XXX mem leak! */
+            char *branch = buf+prefixlen;
+            debug("read a head ref from .git/HEAD: '%s', branch '%s'",
+                buf, branch);
+            strcpy(result->branch, branch);
         }
         else {
             debug(".git/HEAD doesn't look like a head ref: unknown branch");
             result->branch = "(unknown)";
+            strcpy(result->branch, "(unknown)");
         }
     }
 
