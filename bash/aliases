@@ -4,6 +4,9 @@
 
 # speed up opening a directory in TextMate
 
+# Try Atom!
+alias mate="atom"
+
 alias mate.="mate ."
 
 function tm {
@@ -15,6 +18,10 @@ function tm {
       return
     fi
     if [[ "$(pwd)" == "/Users/lailrc/Sites" ]]; then
+      echo -e "\033[31mYou don't want to do this!\033[0m"
+      return
+    fi
+    if [[ "$(pwd)" == "/Users/lailrc/Code" ]]; then
       echo -e "\033[31mYou don't want to do this!\033[0m"
       return
     fi
