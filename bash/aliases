@@ -26,7 +26,15 @@ function tm {
       return
     fi
 
-   mate .
+    mate .
+  fi
+}
+
+function gh {
+  if [[ $# > 0 ]]; then
+    github $@
+  else
+    github .
   fi
 }
 
