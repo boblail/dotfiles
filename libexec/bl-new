@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+#
+# Usage: bl new <command>
+# Summary: Creates a new bl command
+# Help: Example:
+#
+#    bl new chicken
+#
+
+USAGE = "Usage: bl new <command>".freeze
+BL_PATH = File.join(File.dirname(__FILE__), "..").freeze
+
+$:.push BL_PATH
+require "lib/echo"
+require "lib/validations"
+require "erb"
+
+
+
+# TODO: support options for creating a Ruby command or a Bash command
+
+
+
+# Validate arguments
+
+command = ARGV[0]
+assert_presence_of! "command", command
+
+
+
+# Determine editor
+editor = ENV["VISUAL"].to_s
+editor = ENV["EDITOR"].to_s if editor.empty?
+editor = "vim" if editor.empty?
+
+
+
+path = File.join(BL_PATH, "libexec/bl-#{command}")
+unless File.exist?(path)
+
+  # Create the new command from a template
+  template = ERB.new(File.read("#{BL_PATH}/templates/new-command.erb"))
+  File.open(path, "w") { |f| f.write(template.result(binding)) }
+  system "chmod a+x #{path}"
+
+end
+
+
+
+# Edit the command
+exec "#{editor} #{path}"

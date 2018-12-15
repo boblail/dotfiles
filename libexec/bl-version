@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+# Usage: bl version
+# Summary: Displays the version of Bob Lail's toolchain
+
+git --git-dir=/Users/$(whoami)/Me/.git log -1 --format='%C(blue)%h %C(bold)%ad%C(reset)%C(yellow)%d%C(reset)' --date=relative

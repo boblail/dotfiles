@@ -1,0 +1,290 @@
+#!/usr/bin/env bash
+#
+# Usage: bl setup
+# Summary: Fetches the latest version of the toolchain and sets it up
+
+
+# See if `bl setup` was run with the `-b` or `--bootstrap` flags
+bootstrap=false
+for var in "$@"
+do
+  if [ "$var" = "-b" ] || [ "$var" = "--bootstrap" ]; then
+    bootstrap=true
+  else
+    echo "Unknown argument: $var"
+    exit
+  fi
+done
+
+bl_path=$(dirname $(dirname $0))
+cd $bl_path
+
+
+
+# Helpers
+
+function shadowstart() {
+  echo -e -n "\033[90m"
+}
+
+function shadowend() {
+  echo -e -n "\033[0m"
+}
+
+function shadowprint() {
+  shadowstart
+  echo -e "   $@"
+  shadowend
+}
+
+function shadoweval() {
+  shadowprint $@
+  eval $@
+}
+
+function shadowexec() {
+  shadowprint $@
+  exec $@
+}
+
+function echo_run() {
+  echo $@
+  eval $@
+}
+
+function announce() {
+  echo -e "\n\033[94m → $1\033[0m"
+}
+
+function warn() {
+  echo -e "\n\033[93m ! $1\033[0m"
+}
+
+function fail() {
+  echo -e "\n\033[91m ! $1\033[0m"
+}
+
+function success() {
+  echo -e "\033[32m ✓ $1\033[0m"
+}
+
+function prompt() {
+  echo -e -n "\n\033[97m → $1\033[0m "
+}
+
+function contains() {
+  local n=$#
+  local value=${!n}
+  for ((i=1; i < $#; i++)) {
+    if [ "${!i}" == "${value}" ]; then
+      return 0
+    fi
+  }
+  return 1
+}
+
+
+
+# Make sure we're on the master branch
+BRANCH=$(git symbolic-ref HEAD);
+if [ ! $BRANCH = 'refs/heads/master' ]; then
+  warn "Sorry, you're not on master\n"
+  echo "   To use \`bl update\`, please switch back to the master branch:"
+  echo "   cd ~/Me && git checkout master"
+  exit
+fi
+
+
+
+# Get the latest version of the repo
+git fetch --quiet origin
+if [ ! $(git rev-list --count HEAD..origin/master) = '0' ]; then
+  announce "Getting the latest BL"
+
+  shadowstart
+  echo "   git fetch origin master"
+  git fetch origin master > /dev/null 2>&1
+  echo "   git merge --ff-only FETCH_HEAD"
+  shadowend
+
+  git merge --ff-only FETCH_HEAD > /dev/null 2>&1
+
+  if [ $? -ne 0 ]; then
+    warn "It's not possible to fast-forward your master branch to origin/master\n"
+    echo "   Most likely you've committed work on master. If that doesn't sound"
+    echo "   right, here's how to get back on the golden path:"
+    echo
+    echo "     cd ~/Me && git reset --hard origin/master && cd -"
+    exit
+  else
+    # Restart this command since it might have been updated
+    shadowexec "bl update $@"
+  fi
+else
+  success "BL is up-to-date"
+fi
+
+
+
+# Update submodules
+# shadowstart
+# git submodule update --init
+# shadowend
+
+
+
+# Make sure that vcprompt is compiled
+if [ ! -f "$bl_path/src/vcprompt-07f110976599/vcprompt" ]; then
+  shadowstart
+  cd "$bl_path/src/vcprompt-07f110976599/"
+
+  # on Mojave, evoking make triggers the installation of the XCode commandline tools
+  make
+  cd -
+  shadowend
+fi
+
+
+
+# Make sure that BL is initialized
+if [ -z "$_BL_INIT" ]; then
+
+  # TODO: figure this out like `bl-init` does
+  shell="bash"
+  init_cmd="(${_BL_ROOT}/bin/bl init - $shell)"
+  eval_cmd="eval \"\$$init_cmd\""
+
+  announce "Adding 'bl init' to ~/.bash_profile"
+  echo "$eval_cmd" >> ~/.bash_profile
+  source ~/.bash_profile
+
+
+  # Install the solarcasts theme?
+  apm link ~/Me/atom/solarcasts-theme-syntax
+
+fi
+
+
+
+
+# =========================================================================== #
+#  Preflight Troubleshooting                                                  #
+#  This could be extracted to `bl doctor`                                     #
+# =========================================================================== #
+
+# Is your home directory in the expected location?
+if [ ! ~ = "/Users/$USER" ]; then
+  warn "Your home directory is \033[4m`echo ~`\033[0;93m\n   instead of \033[4m/Users/$USER\n"
+  echo "   This will cause problems. Please see IT"
+  echo "   about renaming your home directory."
+  exit
+fi
+
+# Is your C compiler set to an unexpected path?
+if [ ! -z "$CC" ]; then
+  if [ -f "$CC" ]; then
+    warn "Your environment sets CC=$CC"
+    echo "   This might be perfectly fine, but it shouldn't be necessary."
+    echo "   Consider undefining the environment variable CC."
+  else
+    fail "Your environment sets CC=$CC which does not exist"
+    echo "   It shouldn't be necessary to specify a C compiler in your environment."
+    echo "   Consider undefining the environment variable CC."
+    exit
+  fi
+fi
+
+
+
+# Check to see if we've set up the locate database already
+# This helps with troublehshooting
+# if [ ! -f /var/db/locate.database ]; then
+#   announce "Telling OSX to build the locate database"
+#   shadoweval "sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist"
+# else
+#   success "The locate database has already been set up"
+# fi
+
+
+
+if ! [ -x "$(command -v brew)" ]; then
+
+  announce "Installing Homebrew"
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+else
+
+  success "brew is installed"
+  # TODO: check to see if Homebrew is up-to-date
+
+fi
+
+
+
+if ! [ -x "$(command -v rbenv)" ]; then
+
+  announce "Installing rbenv"
+  shadowexec "brew install rbenv"
+  shadowexec "rbenv init"
+
+else
+
+  success "rbenv is installed"
+  # TODO: check to see if ruby-build is up-to-date
+
+fi
+
+
+
+if ! [ -x "$(command -v nodenv)" ]; then
+
+  announce "Installing nodenv"
+  shadowexec "brew install nodenv"
+  shadowexec "nodenv init"
+
+else
+
+  success "nodenv is installed"
+  # TODO: check to see if node-build is up-to-date
+
+fi
+
+
+
+if ! [ -x "$(command -v yarn)" ]; then
+
+  announce "Installing yarn"
+  shadowexec "brew install yarn --without-node"
+
+else
+
+  success "yarn is installed"
+
+fi
+
+
+
+if ! [ -f /usr/local/etc/bash_completion ]; then
+
+  announce "Install bash_completion"
+  shadowexec "brew install bash_completion"
+
+else
+
+  success "bash_completion is installed"
+
+fi
+
+
+
+if ! [ -x "$(command -v heroku)" ]; then
+
+  # https://devcenter.heroku.com/articles/heroku-cli#download-and-install
+  announce "Installing the Heroku Toolchain"
+  shadowexec "brew install heroku/brew/heroku"
+
+else
+
+  success "heroku is installed"
+
+fi

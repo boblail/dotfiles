@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+set -e
+
+print=""
+if [ "$1" = "-" ]; then
+  print=1
+  shift
+fi
+
+shell="$1"
+if [ -z "$shell" ]; then
+  shell="$(basename "$SHELL")"
+fi
+
+resolve_link() {
+  $(type -p greadlink readlink | head -1) $1
+}
+
+abs_dirname() {
+  local cwd="$(pwd)"
+  local path="$1"
+
+  while [ -n "$path" ]; do
+    cd "${path%/*}"
+    local name="${path##*/}"
+    path="$(resolve_link "$name" || true)"
+  done
+
+  pwd
+  cd "$cwd"
+}
+
+root="$(abs_dirname "$0")/.."
+
+if [ -z "$print" ]; then
+  init_cmd="(${_BL_ROOT}/bin/bl init - $shell)"
+  case "$shell" in
+  bash )
+    profile='~/.bash_profile'
+    eval_cmd="\"\$$init_cmd\""
+    ;;
+  zsh )
+    profile='~/.zshenv'
+    eval_cmd="\"\$$init_cmd\""
+    ;;
+  * )
+    profile='your profile'
+    eval_cmd="\"\$$init_cmd\""
+    ;;
+  esac
+
+  { echo "# Load bl automatically by adding"
+    echo "# the following to ${profile}:"
+    echo
+    echo "eval $eval_cmd"
+    echo
+  } >&2
+
+  exit 1
+fi
+
+case "$shell" in
+fish )
+  echo "set -x PATH \$PATH ${_BL_ROOT}/bin;"
+  ;;
+* )
+  echo "export PATH=\"\${PATH}:${_BL_ROOT}/bin\""
+  ;;
+esac
+
+case "$shell" in
+bash | zsh )
+  echo "source \"$root/completions/bl.${shell}\""
+  ;;
+esac
+
+commands=(`${_BL_ROOT}/bin/bl commands --sh`)
+IFS="|"
+case "$shell" in
+fish )
+  # `bl sh-shell` or `bl shell` seems to be a launcher for another shell. It is
+  # the only command that requires the `sh-` prefix, so in `fish`, we'll just
+  # skip the `_bl_wrapper`
+  ;;
+* )
+  cat <<EOS
+_bl_wrapper() {
+  local command="\$1"
+  if [ "\$#" -gt 0 ]; then
+    shift
+  fi
+
+  case "\$command" in
+  ${commands[*]})
+    eval \`bl "sh-\$command" "\$@"\`;;
+  *)
+    command bl "\$command" "\$@";;
+  esac
+}
+EOS
+  ;;
+esac
+
+# zsh can't pass argument with aliases, but bash can.
+# zsh can have functions with the name being only numbers, but bash can't.
+# fix both cases here by letting zsh have a function, and bash have its alias.
+case "$shell" in
+bash )
+  echo "alias bl=_bl_wrapper"
+  ;;
+zsh )
+  echo "bl=_bl_wrapper"
+  ;;
+esac
+
+echo "export _BL_INIT=1"
+
+# Load dotfiles
+echo "source $root/bash/env"
+echo "source $root/bash/aliases"
+echo "source $root/bash/prompt"
+
+# Load rbenv
+echo "eval \"\$(rbenv init -)\""
+
+# Load nodenv
+echo "eval \"\$(nodenv init -)\""
+
+# Load bash autocomplete
+echo "[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion"

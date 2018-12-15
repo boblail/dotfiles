@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -e
+
+# A UNIX function that returns the absolute path from a given argument
+# It isn't present on a clean install of Mojave.
+realpath() {
+  if ! pushd $1 &> /dev/null; then
+    pushd ${1##*/} &> /dev/null
+    echo $( pwd -P )/${1%/*}
+  else
+    pwd -P
+  fi
+  popd > /dev/null
+}
+
+export _BL_ROOT="$(realpath $(dirname $(dirname $0)))"
+export PATH="${_BL_ROOT}/libexec:$PATH"
+
+command="$1"
+case "$command" in
+"" | "-h" | "--help" )
+  exec bl-help
+  ;;
+* )
+  command_path="$(command -v "bl-$command" || true)"
+  if [ ! -x "$command_path" ]; then
+    echo "bl: no such command \`$command'" >&2
+    exit 1
+  fi
+
+  shift
+  exec "$command_path" "$@"
+  ;;
+esac

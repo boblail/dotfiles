@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+#
+# Usage: bl <%= command %> <arg>
+# Summary: TODO: write a summary of the command
+# Help: Example:
+#
+#    bl <%= command %> <arg>
+#
+
+USAGE = "Usage: bl <%= command %> <arg>".freeze
+
+$:.push File.join(File.dirname(__FILE__), "..")
+require "lib/echo"
+require "lib/validations"
+# require "optparse" # <== Use optparse to add support for arguments like `--verbose`
+
+
+
+# Validate arguments
+
+arg = ARGV[0]
+assert_presence_of! "arg", arg

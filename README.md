@@ -1,14 +1,13 @@
-# Bob Lail's dotfiles
+# Personal toolchain
 
 ### Installing
 
 ```
-git clone git@github.com:boblail/dotfiles.git ./Me
-cd Me/src/vcprompt-07f110976599 && make && cd -
+git clone git@github.com:boblail/dotfiles.git ~/Me
+~/Me/bin/bl setup
 ```
 
-Add `. ~/Me/bashrc` to `~/.bashrc`
-Add `. ~/Me/bash_profile` to `~/.profile`
+##### iTerm2 Profile
 
 Open iTerm's Preferences, and select **Load preferences from a custom folder or URL** and fill in `~/Me/iterm2`
 

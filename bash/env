@@ -1,7 +1,10 @@
 # for configuring environment: paths, etc
 
-# path
+# Get `bl` and `vcprompt` into PATH
 export PATH=$DOTFILES_PATH/bin:$PATH
+
+# Get Postgres.app into PATH
+export PATH=/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH
 
 # grep
 export GREP_OPTIONS='--color=auto'
