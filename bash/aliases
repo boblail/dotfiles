@@ -205,11 +205,12 @@ function gpo() {
   gp origin $current_branch
 }
 
-function gpo!() {
+function gpo_bang() {
   # pushes the current branch; whatever that is
   gbranch
   gp -f --no-verify origin $current_branch
 }
+alias gpo!="gpo_bang"
 
 function guo() {
   # pushes the current branch; whatever that is
