@@ -10,5 +10,8 @@ export PATH=/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH
 export GREP_OPTIONS='--color=auto'
 export GREP_COLOR='1;32'
 
+# So that `bundle open` works
+export BUNDLER_EDITOR=atom
+
 # update Terminal window title
 PROMPT_COMMAND='echo -ne "\033]0;${PWD/#$HOME/~} (${USER}@${HOSTNAME%%.*})"; echo -ne "\007"'
