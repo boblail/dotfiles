@@ -115,16 +115,26 @@ esac
 
 echo "export _BL_INIT=1"
 
-# Load dotfiles
-echo "source $root/bash/env"
-echo "source $root/bash/aliases"
-echo "source $root/bash/prompt"
+if [[ ! " $@ " =~ " --skip-env " ]]; then
+  echo "source $root/bash/env"
+fi
 
-# Load rbenv
-echo "eval \"\$(rbenv init -)\""
+if [[ ! " $@ " =~ " --skip-aliases " ]]; then
+  echo "source $root/bash/aliases"
+fi
 
-# Load nodenv
-echo "eval \"\$(nodenv init -)\""
+if [[ ! " $@ " =~ " --skip-prompt " ]]; then
+  echo "source $root/bash/prompt"
+fi
 
-# Load bash autocomplete
-echo "[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion"
+if [[ ! " $@ " =~ " --skip-rbenv " ]]; then
+  echo "eval \"\$(rbenv init -)\""
+fi
+
+if [[ ! " $@ " =~ " --skip-nodenv " ]]; then
+  echo "eval \"\$(nodenv init -)\""
+fi
+
+if [[ ! " $@ " =~ " --skip-bash-completion " ]]; then
+  echo "[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion"
+fi
