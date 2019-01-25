@@ -202,15 +202,41 @@ function gbranch() {
 function gpo() {
   # pushes the current branch; whatever that is
   gbranch
-  gp origin $current_branch
+
+  # When pushing a new branch to GitHub, you see:
+  # remote:
+  # remote: Create a pull request for 'test' on GitHub by visiting:
+  # remote:      https://...
+  # remote:
+
+  # When pushing a new branch to GitLab, you see:
+  # remote:
+  # remote: To create a merge request for test, visit:
+  # remote:   https://...
+  # remote:
+
+  # When pushing a new branch to Bitbucket, you see:
+  # remote:
+  # remote: Create pull request for test:
+  # remote:   https://...
+  # remote:
+
+  # Git writes these relevant details to STDERR so we redirect that to STDOUT
+  # so that we can pipe it to `tee`.
+  #
+  # We add the --progress flag because (by default) Git only shows its
+  # push/pull progress when STDERR is directed to a TTY; --progress forces
+  # Git to show the progress anyway.
+  #
+  # Lastly we grep for anything that looks like a URL.
+  url=$(  gp origin $current_branch $* --progress   2>&1 | tee /dev/tty | egrep -o 'https?://[^ ]*')
+
+  if [ ! -z "$url" ]; then
+    open $url
+  fi
 }
 
-function gpo_bang() {
-  # pushes the current branch; whatever that is
-  gbranch
-  gp -f --no-verify origin $current_branch
-}
-alias gpo!="gpo_bang"
+alias gpo!="gpo -f"
 
 function guo() {
   # pushes the current branch; whatever that is
