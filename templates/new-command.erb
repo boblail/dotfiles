@@ -8,8 +8,9 @@
 #
 
 USAGE = "Usage: bl <%= command %> <arg>".freeze
+ROOT = File.join(File.dirname(__FILE__), "..").freeze
 
-$:.push File.join(File.dirname(__FILE__), "..")
+$:.push ROOT
 require "lib/echo"
 require "lib/validations"
 # require "optparse" # <== Use optparse to add support for arguments like `--verbose`

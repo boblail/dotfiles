@@ -8,10 +8,9 @@
 #
 
 USAGE = "Usage: bl new <command>".freeze
-BL_PATH = File.join(File.dirname(__FILE__), "..").freeze
+ROOT = File.join(File.dirname(__FILE__), "..").freeze
 
-$:.push BL_PATH
-require "lib/echo"
+$:.push ROOT
 require "lib/validations"
 require "erb"
 
@@ -35,11 +34,11 @@ editor = "vim" if editor.empty?
 
 
 
-path = File.join(BL_PATH, "libexec/bl-#{command}")
+path = File.join(ROOT, "libexec/bl-#{command}")
 unless File.exist?(path)
 
   # Create the new command from a template
-  template = ERB.new(File.read("#{BL_PATH}/templates/new-command.erb"))
+  template = ERB.new(File.read("#{ROOT}/templates/new-command.erb"))
   File.open(path, "w") { |f| f.write(template.result(binding)) }
   system "chmod a+x #{path}"
 
