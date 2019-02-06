@@ -7,7 +7,6 @@
 #    bl new chicken
 #
 
-USAGE = "Usage: bl new <command>".freeze
 ROOT = File.join(File.dirname(__FILE__), "..").freeze
 
 $:.push ROOT
