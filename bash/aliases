@@ -203,6 +203,8 @@ function gpo() {
   # pushes the current branch; whatever that is
   gbranch
 
+  origin=$(git config --default "origin" --get "branch.$current_branch.remote")
+
   # When pushing a new branch to GitHub, you see:
   # remote:
   # remote: Create a pull request for 'test' on GitHub by visiting:
@@ -229,7 +231,7 @@ function gpo() {
   # Git to show the progress anyway.
   #
   # Lastly we grep for anything that looks like a URL.
-  url=$(  gp origin $current_branch $* --progress   2>&1 | tee /dev/tty | egrep -o 'https?://[^ ]*')
+  url=$(  gp $origin $current_branch $* --progress   2>&1 | tee /dev/tty | egrep -o 'https?://[^ ]*')
 
   if [ ! -z "$url" ]; then
     open $url
