@@ -1,0 +1,39 @@
+#!/usr/bin/env ruby
+#
+# Usage: bl git:prune
+# Summary: Deletes local branches that have been merged to master
+# Help: Example:
+#
+#    bl git:prune
+#
+
+ROOT = File.expand_path(File.join(File.dirname(__FILE__), "..")).freeze
+
+$:.push ROOT
+require "lib/echo"
+
+# Update remotes
+echo_run "git remote update --prune 2> /dev/null", echo: :all
+puts ""
+
+# List local branches whose heads have been merged to origin/master
+branches_merged_to_master = `git branch --merged origin/master --no-color`.split - %w{ * master }
+
+# No local branches that haven't been merged
+if branches_merged_to_master.empty?
+  puts "\e[32mNo unpruned branches\e[0m"
+  exit
+end
+
+puts "These branches have been merged to origin/master:", ""
+branches_merged_to_master.each do |branch|
+  puts "\e[90m - \e[0m#{branch}"
+end
+
+print "\nDelete them? (y/yes) "
+input = STDIN.gets.strip.downcase
+exit unless input == "y" || input == "yes"
+
+branches_merged_to_master.each do |branch|
+  echo_run "git branch -D #{branch} > /dev/null"
+end
