@@ -1,3 +1,5 @@
+CommandFailed = Class.new(SystemExit)
+
 def echo(command)
   $stderr.puts "\e[90m   #{command}\e[0m"
 end
@@ -16,6 +18,11 @@ def echo_run(command, options={})
     echo command
     system command
   end
+end
+
+def echo_run!(command, options={})
+  return if echo_run(command, options)
+  raise CommandFailed
 end
 
 def echo_exec(command, options={})

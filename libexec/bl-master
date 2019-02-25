@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+#
+# Usage: bl master
+# Summary: Checks out the master branch, prunes local branches
+# Help: Example:
+#
+#    bl master
+#
+
+ROOT = File.expand_path(File.join(File.dirname(__FILE__), "..")).freeze
+
+$:.push ROOT
+require "lib/echo"
+require "lib/git"
+require "lib/validations"
+require "shellwords"
+
+
+
+# Validation
+
+assert_git_repo!
+
+
+if Git.has_uncommitted_changes?
+  echo_run! "git stash save -u -q"
+end
+
+unless Git.current_branch == "master"
+  echo_run! "git checkout master > /dev/null 2>&1"
+end
+
+echo_run! "git pull origin master -q"
+
+# List local branches whose heads have been merged to origin/master
+branches_merged_to_master = `git branch --merged master --no-color`.split - %w{ * master }
+
+unless branches_merged_to_master.empty?
+  if branches_merged_to_master.length == 1
+    announce "1 branch pruned"
+    puts "   Restore it with:"
+  else
+    announce "#{branches_merged_to_master.length} branches pruned"
+    puts "   Restore them with:"
+  end
+
+  branches_merged_to_master.each do |branch|
+    sha = Git.show_ref(branch)
+    system "git branch -D -q #{branch}"
+    puts "      git branch #{Shellwords.escape(branch)} #{sha}"
+  end
+
+  puts ""
+end

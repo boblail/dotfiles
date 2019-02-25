@@ -1,4 +1,12 @@
+require "lib/git"
+
 module Validations
+
+  def assert_git_repo!
+    unless Git.is_repo?
+      puts_not_git_repo_message
+    end
+  end
 
   def assert_presence_of!(key, value)
     if !value || (value.is_a?(String) && value.empty?)
@@ -69,6 +77,11 @@ module Validations
 
 
 
+  def puts_not_git_repo_message
+    puts "\e[37m#{usage}\e[0m",
+         "",
+         "    \e[35m#{Dir.pwd}\e[0m is not in a git repo"
+  end
 
   def puts_missing_value_message(key)
     puts "\e[37m#{usage}\e[0m",
