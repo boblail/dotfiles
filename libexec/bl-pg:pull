@@ -1,0 +1,111 @@
+#!/usr/bin/env ruby
+#
+# Usage: bl pg:pull <database> [--add <database>]
+# Summary: Backs up a remote database and loads it locally
+# Help: Example:
+#
+#    bl pg:pull lailrecipes
+#
+
+ROOT = File.join(File.dirname(__FILE__), "..").freeze
+
+$:.push ROOT
+require "lib/echo"
+require "lib/validations"
+require "json"
+require "optparse" # <== Use optparse to add support for arguments like `--verbose`
+require "terminal-notifier"
+
+file = File.expand_path("~/.databases.json")
+databases = File.exists?(file) ? JSON.load(File.read(file)) : {}
+
+
+
+# Validate arguments
+
+$fake = false
+OptionParser.new do |opts|
+  opts.on("-aNAME", "--add=NAME", "Register a new database") do |key|
+    print "host: "
+    host = gets.chomp
+    print "username: "
+    username = gets.chomp
+    print "password: "
+    password = gets.chomp
+    print "database: "
+    database = gets.chomp
+
+    databases[key] = {
+      host: host,
+      username: username,
+      password: password,
+      database: database
+    }
+
+    File.write(file, JSON.dump(databases))
+
+    success "#{key} added"
+
+    exit 0
+  end
+end.parse!
+
+key = ARGV[0]
+assert_one_of! "database", key, databases.keys
+
+
+
+# Make it so
+
+host = databases.fetch(key).fetch("host")
+username = databases.fetch(key).fetch("username")
+password = databases.fetch(key).fetch("password")
+database = databases.fetch(key).fetch("database")
+backup_path = "~/Dropbox/Backups/#{key}/#{key}-#{Time.now.strftime("%Y%m%d")}.dump"
+local_database_name = "#{key}_production_copy"
+temp_database_name = File.basename(backup_path, ".dump").tr("-", "_")
+
+
+# Download database
+
+echo_run [
+  "PGPASSWORD=#{password}",
+  "pg_dump",
+  "-Fc",
+  "--no-acl",
+  "--no-owner",
+  "-h#{host}",
+  "-U#{username}",
+  database,
+  "> #{backup_path}"
+].join(" ")
+
+
+# Restore database
+
+echo_run! "bl pg:restore #{backup_path}", fake: $fake
+
+
+# Send a notification if pg:pull will fail because there are other sesssions using the database
+
+open_sessions_count = `psql -c "SELECT count(*) FROM pg_stat_activity WHERE datname='#{local_database_name}';" -qtA`.to_i
+unless open_sessions_count == 0
+  error_message = "There are #{open_sessions_count} other sessions using #{local_database_name}"
+  TerminalNotifier.notify(error_message, title: "bl pg:pull Failed!")
+  error error_message
+  exit 1
+end
+
+
+# Rename the database to its normal name
+
+databases = `psql -lqt | cut -d \\| -f 1`.split.reject(&:empty?)
+if databases.member? local_database_name
+  exit 1 unless echo_run "dropdb #{local_database_name}", fake: $fake
+end
+echo_run "psql -c \"ALTER DATABASE #{temp_database_name} RENAME TO #{local_database_name}\"", fake: $fake
+
+
+# Notify that pg:pull is finished
+
+TerminalNotifier.notify("#{local_database_name} is ready to use", title: "bl pg:pull Finished!")

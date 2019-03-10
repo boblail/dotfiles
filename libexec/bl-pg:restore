@@ -1,0 +1,61 @@
+#!/usr/bin/env ruby
+#
+# Usage: bl pg:restore <database.dump> [--fake]
+# Summary: Restores a database backup locally
+# Example:
+#
+#    bl pg:restore ~/Dropbox/Backups/Lailrecipes/lailrecipes-20190310.dump
+#
+
+ROOT = File.join(File.dirname(__FILE__), "..").freeze
+
+$:.push ROOT
+require "lib/validations"
+require "lib/echo"
+require "optparse"
+require "shellwords"
+
+
+
+# Options
+
+$fake = false
+OptionParser.new do |args|
+  args.on("--fake", "Goes through the steps without actually merging the database") do
+    $fake = true
+  end
+end.parse!
+
+
+
+# Validations
+
+backup_path = File.expand_path(ARGV.first) if ARGV.first
+assert_file_exists! "database", backup_path
+
+
+
+# Make it so
+
+backup_name = File.basename(backup_path)
+temp_database_name = File.basename(backup_path, ".dump").tr("-", "_")
+
+# Create the target database unless it already exists
+databases = `psql -lqt | cut -d \\| -f 1`.split.reject(&:empty?)
+do_restore = true
+do_clean = true
+if databases.member? temp_database_name
+  prompt "#{backup_name} has already been restored to #{temp_database_name}\n" <<
+         "   Do you want to overwrite it? (yn) "
+  do_restore = false unless $stdin.gets.strip.downcase == "y"
+else
+  system "createdb #{temp_database_name}" unless $fake
+  do_clean = false
+end
+
+if do_restore
+  # Restore the database
+  announce "Restoring #{backup_name} to #{temp_database_name}..."
+  command = "pg_restore --verbose #{"--clean" if do_clean} --no-acl --no-owner --jobs=6 -h localhost -d #{temp_database_name} #{Shellwords.escape backup_path}"
+  echo_exec command, fake: $fake
+end
