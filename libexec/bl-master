@@ -52,3 +52,17 @@ unless branches_merged_to_master.empty?
 
   puts ""
 end
+
+# List local branches
+local_branches = `git branch --no-color`.split - %w{ * master }
+
+if local_branches.empty?
+  puts "   No local branches"
+else
+  puts "   Local branches:"
+  local_branches.each do |branch|
+    puts "      #{branch}"
+  end
+end
+
+puts ""
