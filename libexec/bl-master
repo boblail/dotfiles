@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #
-# Usage: bl master
+# Usage: bl master [-q]
 # Summary: Checks out the master branch, prunes local branches
 # Help: Example:
 #
@@ -14,6 +14,18 @@ require "lib/echo"
 require "lib/git"
 require "lib/validations"
 require "shellwords"
+require "optparse"
+
+
+
+# Parse options
+
+$quiet = false
+OptionParser.new do |opts|
+  opts.on("-q", "--quiet", "Quiet") do
+    $quiet = true
+  end
+end.parse!
 
 
 
@@ -23,14 +35,14 @@ assert_git_repo!
 
 
 if Git.has_uncommitted_changes?
-  echo_run! "git stash save -u -q"
+  echo_run! "git stash save -u -q", echo: !$quiet
 end
 
 unless Git.current_branch == "master"
-  echo_run! "git checkout master > /dev/null 2>&1"
+  echo_run! "git checkout master > /dev/null 2>&1", echo: !$quiet
 end
 
-echo_run! "git pull origin master -q"
+echo_run! "git pull origin master -q", echo: !$quiet
 
 # List local branches whose heads have been merged to origin/master
 branches_merged_to_master = `git branch --merged master --no-color`.split - %w{ * master }

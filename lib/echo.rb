@@ -15,7 +15,7 @@ def echo_run(command, options={})
     print "\e[0m"
     result
   else
-    echo command
+    echo command unless options[:echo] == false
     system command
   end
 end
