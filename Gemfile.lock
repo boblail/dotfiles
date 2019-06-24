@@ -1,0 +1,26 @@
+GIT
+  remote: https://github.com/boblail/synonymous
+  revision: 253cb03cebd1f1e9ba3cd73138dd964c533c9cd7
+  branch: master
+  specs:
+    synonymous (0.1.0)
+      faraday
+      faraday-raise-errors
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    faraday (0.15.4)
+      multipart-post (>= 1.2, < 3)
+    faraday-raise-errors (0.3.0)
+      faraday
+    multipart-post (2.1.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  synonymous!
+
+BUNDLED WITH
+   1.17.2

@@ -1,0 +1,106 @@
+#!/usr/bin/env ruby
+#
+# Usage: bl syn <word>
+# Summary: Lists synonyms for a word
+# Help: Example:
+#
+#    bl syn slice
+#
+
+ROOT = File.join(File.dirname(__FILE__), "..").freeze
+LIST_INDENT = 5
+MAX_LINE_LENGTH = 80
+
+$:.push ROOT
+require "rubygems"
+require "bundler/setup"
+require "lib/echo"
+require "lib/validations"
+require "synonymous"
+
+
+
+# Validate arguments
+
+word = ARGV.join(" ")
+assert_presence_of! "word", word
+
+api_key = ENV.fetch("BL_DICTIONARYAPI_KEY") do
+  puts "Missing BL_DICTIONARYAPI_KEY. Get yours at https://dictionaryapi.com/register/index"
+  exit 1
+end
+
+
+client = Synonymous::Client.new(api_key: api_key)
+response = client.get(word)
+
+unless response.success?
+  puts "Did you mean? #{response.suggestions.join(", ")}"
+  exit 1
+end
+
+def print_word_list(words, cursor:)
+  first = true
+  words.each do |word|
+    word = word.to_s
+    if first
+      if cursor + word.length > MAX_LINE_LENGTH
+        print "\n", " " * LIST_INDENT
+        cursor = 0
+      end
+    else
+      if cursor + word.length + 2 > MAX_LINE_LENGTH
+        print "\n", " " * LIST_INDENT
+        cursor = 0
+      else
+        print ", "
+        cursor += 2
+      end
+    end
+
+    print word
+    cursor += word.length
+    first = false
+  end
+  cursor
+end
+
+def print_word_lists(heading, words, cursor:)
+  return cursor if words.empty?
+
+  print "; "
+  cursor += 2
+  if cursor + heading.length + 2 + words[0].to_s.length > MAX_LINE_LENGTH
+    print "\n", " " * LIST_INDENT
+    cursor = 0
+  end
+  print "\e[36m#{heading}: \e[0m"
+  print_word_list words, cursor: cursor + heading.length + 2
+end
+
+response.entries.each do |entry|
+  puts "\e[36;1m#{entry.functional_label}\e[0m\n\n"
+
+  entry.senses.each do |sense|
+    print "  \e[90m"
+    if sense.number
+      print sense.number.ljust(LIST_INDENT - 2)
+    else
+      print " " * (LIST_INDENT - 2)
+    end
+    print "\e[97m#{sense}\e[0m: "
+
+    cursor = sense.to_s.length + 2
+    cursor = print_word_list sense.synonyms, cursor: cursor
+    cursor = print_word_lists "RELATED", sense.related_words, cursor: cursor
+    cursor = print_word_lists "PHRASES", sense.synonymous_phrases, cursor: cursor
+    cursor = print_word_lists "ANTONYMS", sense.antonyms, cursor: cursor
+    cursor = print_word_lists "NEAR ANTONYMS", sense.near_antonyms, cursor: cursor
+
+    puts "", ""
+  end
+end
+
+if response.suggestions.any?
+  puts "See also: #{response.suggestions.join(", ")}"
+end
