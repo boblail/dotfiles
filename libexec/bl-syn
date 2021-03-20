@@ -12,11 +12,15 @@ LIST_INDENT = 5
 MAX_LINE_LENGTH = 80
 
 $:.push ROOT
-require "rubygems"
-require "bundler/setup"
 require "lib/echo"
 require "lib/validations"
-require "synonymous"
+require "bundler/inline"
+
+gemfile do
+  source "https://rubygems.org"
+
+  gem "synonymous", ">= 0.2.0"
+end
 
 
 
