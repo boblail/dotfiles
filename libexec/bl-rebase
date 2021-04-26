@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#
+# Usage: bl rebase [-q]
+# Summary: Rebases the current branch off of master
+
+bl master
+git checkout -
+git rebase -i master
