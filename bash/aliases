@@ -2,39 +2,29 @@
 # shortuts
 #
 
-# speed up opening a directory in TextMate
-
-# Try Atom!
-alias mate="atom"
-
-alias mate.="mate ."
-
+# Speed up opening a directory in VS Code
 function tm {
   if [[ $# > 0 ]]; then
-    mate $@
+    code $@
   else
-    if [[ "$(pwd)" == "/Users/lailrc" ]]; then
+    if [[ "$(pwd)" == "/Users/$(whoami)" ]]; then
       echo -e "\033[31mYou don't want to do this!\033[0m"
       return
     fi
-    if [[ "$(pwd)" == "/Users/lailrc/Sites" ]]; then
+    if [[ "$(pwd)" == "/Users/$(whoami)/Sites" ]]; then
       echo -e "\033[31mYou don't want to do this!\033[0m"
       return
     fi
-    if [[ "$(pwd)" == "/Users/lailrc/Code" ]]; then
+    if [[ "$(pwd)" == "/Users/$(whoami)/Development" ]]; then
+      echo -e "\033[31mYou don't want to do this!\033[0m"
+      return
+    fi
+    if [[ "$(pwd)" == "/Users/$(whoami)/Code" ]]; then
       echo -e "\033[31mYou don't want to do this!\033[0m"
       return
     fi
 
-    mate .
-  fi
-}
-
-function gh {
-  if [[ $# > 0 ]]; then
-    github $@
-  else
-    github .
+    code .
   fi
 }
 
