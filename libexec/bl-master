@@ -33,19 +33,20 @@ end.parse!
 
 assert_git_repo!
 
+default_branch = Git.default_branch
 
 if Git.has_uncommitted_changes?
   echo_run! "git stash save -u -q", echo: !$quiet
 end
 
-unless Git.current_branch == "master"
-  echo_run! "git checkout master > /dev/null 2>&1", echo: !$quiet
+unless Git.current_branch == default_branch
+  echo_run! "git checkout #{default_branch} > /dev/null 2>&1", echo: !$quiet
 end
 
-echo_run! "git pull origin master -q", echo: !$quiet
+echo_run! "git pull origin #{default_branch} -q", echo: !$quiet
 
 # List local branches whose heads have been merged to origin/master
-branches_merged_to_master = `git branch --merged master --no-color`.split - %w{ * master }
+branches_merged_to_master = `git branch --merged #{default_branch} --no-color`.split - ["*", default_branch]
 
 unless branches_merged_to_master.empty?
   if branches_merged_to_master.length == 1
@@ -66,7 +67,7 @@ unless branches_merged_to_master.empty?
 end
 
 # List local branches
-local_branches = `git branch --no-color`.split - %w{ * master }
+local_branches = `git branch --no-color`.split - ["*", default_branch]
 
 if local_branches.empty?
   puts "   No local branches"
