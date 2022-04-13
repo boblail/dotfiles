@@ -19,7 +19,7 @@ require "bundler/inline"
 gemfile do
   source "https://rubygems.org"
 
-  gem "synonymous", ">= 0.2.0"
+  gem "synonymous", ">= 0.3.0"
 end
 
 
