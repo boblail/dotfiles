@@ -42,7 +42,7 @@ OptionParser.new do |opts|
       database: database
     }
 
-    File.write(file, JSON.dump(databases))
+    File.write(file, JSON.pretty_generate(databases))
 
     success "#{key} added"
 
@@ -61,25 +61,35 @@ host = databases.fetch(key).fetch("host")
 username = databases.fetch(key).fetch("username")
 password = databases.fetch(key).fetch("password")
 database = databases.fetch(key).fetch("database")
-backup_path = "~/Dropbox/Backups/#{key}/#{key}-#{Time.now.strftime("%Y%m%d")}.dump"
+backup_dir = File.expand_path("~/Backups/#{key}")
+echo_run "mkdir -p #{Shellwords.escape(backup_dir)}" unless File.exists?(backup_dir)
+backup_path = "#{backup_dir}/#{key}-#{Time.now.strftime("%Y%m%d")}.dump"
 local_database_name = "#{key}_production_copy"
 temp_database_name = File.basename(backup_path, ".dump").tr("-", "_")
 
 
 # Download database
 
-echo_run [
-  "PGPASSWORD=#{password}",
-  "pg_dump",
-  "-Fc",
-  "--no-acl",
-  "--no-owner",
-  "-h#{host}",
-  "-U#{username}",
-  database,
-  "> #{backup_path}"
-].join(" ")
+do_download = true
+if File.exists?(File.expand_path(backup_path))
+  prompt "#{File.basename(backup_path)} has already been downloaded\n" <<
+         "   Do you want to redownload it? (yn) "
+  do_download = false unless $stdin.gets.strip.downcase == "y"
+end
 
+if do_download == true
+  echo_run [
+    "PGPASSWORD=#{password}",
+    "pg_dump",
+    "-Fc",
+    "--no-acl",
+    "--no-owner",
+    "-h#{host}",
+    "-U#{username}",
+    database,
+    "> #{backup_path}"
+  ].join(" ")
+end
 
 # Restore database
 
@@ -92,7 +102,7 @@ open_sessions_count = `psql -c "SELECT count(*) FROM pg_stat_activity WHERE datn
 unless open_sessions_count == 0
   error_message = "There are #{open_sessions_count} other sessions using #{local_database_name}"
   TerminalNotifier.notify(error_message, title: "bl pg:pull Failed!")
-  error error_message
+  failure error_message
   exit 1
 end
 

@@ -4,7 +4,7 @@
 # Summary: Restores a database backup locally
 # Example:
 #
-#    bl pg:restore ~/Dropbox/Backups/Lailrecipes/lailrecipes-20190310.dump
+#    bl pg:restore ~/Backups/Lailrecipes/lailrecipes-20190310.dump
 #
 
 ROOT = File.join(File.dirname(__FILE__), "..").freeze
