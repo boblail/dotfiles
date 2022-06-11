@@ -14,7 +14,7 @@ require "lib/echo"
 require "lib/validations"
 require "json"
 require "optparse" # <== Use optparse to add support for arguments like `--verbose`
-require "terminal-notifier"
+require "shellwords"
 
 file = File.expand_path("~/.databases.json")
 databases = File.exists?(file) ? JSON.load(File.read(file)) : {}
@@ -101,7 +101,7 @@ echo_run! "bl pg:restore #{backup_path}", fake: $fake
 open_sessions_count = `psql -c "SELECT count(*) FROM pg_stat_activity WHERE datname='#{local_database_name}';" -qtA`.to_i
 unless open_sessions_count == 0
   error_message = "There are #{open_sessions_count} other sessions using #{local_database_name}"
-  TerminalNotifier.notify(error_message, title: "bl pg:pull Failed!")
+  system "terminal-notifier -message #{Shellwords.escape(error_message)} -title #{Shellwords.escape("bl pg:pull Failed!")}"
   failure error_message
   exit 1
 end
@@ -118,4 +118,4 @@ echo_run "psql -c \"ALTER DATABASE #{temp_database_name} RENAME TO #{local_datab
 
 # Notify that pg:pull is finished
 
-TerminalNotifier.notify("#{local_database_name} is ready to use", title: "bl pg:pull Finished!")
+system "terminal-notifier -message #{Shellwords.escape("#{local_database_name} is ready to use")} -title #{Shellwords.escape("bl pg:pull Finished!")}"
