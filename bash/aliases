@@ -47,8 +47,6 @@ alias brs="bundle exec rails s"
 alias brc="bundle exec rails c"
 alias brg="bundle exec rails g"
 alias migrate="bundle exec rake db:migrate"
-alias test="be rake test"
-alias test:all="be rake test:all"
 
 # s3cmd
 alias s3='s3cmd'
