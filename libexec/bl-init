@@ -40,7 +40,7 @@ if [ -z "$print" ]; then
     eval_cmd="\"\$$init_cmd\""
     ;;
   zsh )
-    profile='~/.zshenv'
+    profile='~/.zprofile'
     eval_cmd="\"\$$init_cmd\""
     ;;
   * )
