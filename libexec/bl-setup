@@ -118,7 +118,7 @@ if [ ! $(git rev-list --count HEAD..origin/master) = '0' ]; then
     exit
   else
     # Restart this command since it might have been updated
-    shadowexec "bl update $@"
+    shadowexec "bl setup $@"
   fi
 else
   success "BL is up-to-date"
@@ -259,19 +259,6 @@ if ! [ -x "$(command -v yarn)" ]; then
 else
 
   success "yarn is installed"
-
-fi
-
-
-
-if ! [ -f /usr/local/etc/bash_completion ]; then
-
-  announce "Install bash_completion"
-  shadowexec "brew install bash_completion"
-
-else
-
-  success "bash_completion is installed"
 
 fi
 

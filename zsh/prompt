@@ -1,0 +1,11 @@
+autoload -Uz vcs_info
+precmd_vcs_info() { vcs_info }
+precmd_functions+=( precmd_vcs_info )
+setopt prompt_subst
+zstyle ':vcs_info:git:*' formats $'\e[1;36m%b\e[0m'
+zstyle ':vcs_info:*' enable git
+
+# Update the command prompt to be <current_directory> (<user>@<machine>) [git_branch]
+# Note that the git branch is given a special color
+NEWLINE=$'\n'
+PROMPT="%B%~%b (%n@%m) \$vcs_info_msg_0_ ${NEWLINE}→ "
