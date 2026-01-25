@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
 # Usage: bl rebase [-q]
-# Summary: Rebases the current branch off of master
+# Summary: Rebases the current branch off of the main branch
 
 bl master
 git checkout -
-git rebase -i master
+git rebase -i refs/remotes/origin/HEAD

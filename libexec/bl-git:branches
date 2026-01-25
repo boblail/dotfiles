@@ -1,0 +1,63 @@
+#!/usr/bin/env ruby
+#
+# Usage: bl git:prune
+# Summary: Deletes local branches that have been merged to master
+# Help: Example:
+#
+#    bl git:prune
+#
+
+ROOT = File.expand_path(File.join(File.dirname(__FILE__), "..")).freeze
+
+$:.push ROOT
+require "lib/echo"
+require "shellwords"
+
+# List local branches
+branches = `git branch --no-color`.split - %w{ * master }
+puts "#{branches.size} local branches"
+
+all_commits = `git log --format='%s' master`.lines.map(&:strip)
+puts "#{all_commits.size} local commits"
+
+branches_to_remove = []
+
+branches.each do |branch|
+  puts branch
+  command = "git log --format='%s' master..#{branch}"
+  # echo command
+  commits = `#{command}`.lines.map(&:strip)
+  if commits.empty?
+    puts "   \e[32mNo commits\e[0m"
+    next
+  end
+
+  all_good =
+    commits.all? do |commit|
+      rx = /^#{Regexp.escape(commit)}(?: \(#\d+\))?$/
+      if all_commits.grep(rx).any?
+        puts "   \e[32m#{commit}\e[0m"
+        true
+      else
+        puts "   \e[31m#{commit}\e[0m"
+        false
+      end
+    end
+  
+  branches_to_remove << branch if all_good
+end
+
+exit 0 if branches_to_remove.empty?
+
+puts "These branches have only commits that appear on master:", ""
+branches_to_remove.each do |branch|
+  puts "\e[90m - \e[0m#{branch}"
+end
+
+print "\nDelete them? (y/yes) "
+input = STDIN.gets.strip.downcase
+exit unless input == "y" || input == "yes"
+
+branches_to_remove.each do |branch|
+  echo_run "git branch -D #{branch} > /dev/null"
+end
