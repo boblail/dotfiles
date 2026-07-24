@@ -168,6 +168,32 @@ fi
 
 
 # =========================================================================== #
+#  Link AGENTS.md into the config locations AI tools look for                 #
+# =========================================================================== #
+
+announce "Linking AGENTS.md aliases"
+
+agents_file="$(cd "$bl_path" && pwd)/AGENTS.md"
+
+function link_agents() {
+  local target="$1"
+  mkdir -p "$(dirname "$target")"
+  if [ -L "$target" ] && [ "$(readlink "$target")" = "$agents_file" ]; then
+    success "$target already linked"
+  else
+    ln -sfn "$agents_file" "$target"
+    success "Linked $target"
+  fi
+}
+
+link_agents ~/.claude/CLAUDE.md
+link_agents ~/.codex/AGENTS.md
+link_agents ~/.gemini/GEMINI.md
+
+
+
+
+# =========================================================================== #
 #  Preflight Troubleshooting                                                  #
 #  This could be extracted to `bl doctor`                                     #
 # =========================================================================== #
