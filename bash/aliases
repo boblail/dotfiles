@@ -66,12 +66,13 @@ alias gl="git log --color --date=relative --format=format:'%C(cyan)%h%C(reset) %
 alias gl1="gl -1 | cat"
 alias gcommits="git shortlog -ns"
 alias gm="git merge --ff-only"
-alias gp="git push --tags "
+alias gp="git push "
 alias gu="git pull --ff-only --tags "
 alias gg="git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(cyan)%h %C(green)%ad %C(yellow)%d %C(reset)%s %C(blue)(%an)%C(reset)'"
 alias gbr="git branch"
 alias gtrsh="git checkout --"
 alias gcopy='gl --pretty="%s" -1 | pbcopy'
+alias claude!='claude --dangerously-skip-permissions'
 
 function commitsnipe() {
   shadowprint "git commit --amend --no-edit --reset-author"

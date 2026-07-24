@@ -46,7 +46,7 @@ end
 echo_run! "git pull origin #{default_branch} -q", echo: !$quiet
 
 # List local branches whose heads have been merged to origin/master
-branches_merged_to_master = `git branch --merged #{default_branch} --no-color`.split - ["*", default_branch]
+branches_merged_to_master = `git branch --merged #{default_branch} --no-color --sort=-committerdate`.lines.map { |l| l.sub(/^[* +] +/, "").strip }.reject(&:empty?) - [default_branch]
 
 unless branches_merged_to_master.empty?
   if branches_merged_to_master.length == 1
@@ -67,7 +67,7 @@ unless branches_merged_to_master.empty?
 end
 
 # List local branches
-local_branches = `git branch --no-color`.split - ["*", default_branch]
+local_branches = `git branch --no-color --sort=-committerdate`.lines.map { |l| l.sub(/^[* +] +/, "").strip }.reject(&:empty?) - [default_branch]
 
 if local_branches.empty?
   puts "   No local branches"

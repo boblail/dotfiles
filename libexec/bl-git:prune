@@ -17,7 +17,7 @@ echo_run "git remote update --prune 2> /dev/null", echo: :all
 puts ""
 
 # List local branches whose heads have been merged to origin/master
-branches_merged_to_master = `git branch --merged origin/master --no-color`.split - %w{ * master }
+branches_merged_to_master = `git branch --merged origin/master --no-color --sort=-committerdate`.split - %w{ * master }
 
 # No local branches that haven't been merged
 if branches_merged_to_master.empty?

@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+#
+# Usage: bl git:rebase
+# Summary: Rebases all branvches
+# Help: Example:
+#
+#    bl git:rebase
+#
+
+ROOT = File.expand_path(File.join(File.dirname(__FILE__), "..")).freeze
+
+$:.push ROOT
+require "lib/echo"
+require "shellwords"
+
+head_branch = `git symbolic-ref -q --short refs/remotes/origin/HEAD`[/^origin\/(.+)$/, 1] || "master"
+
+# List local branches
+branches =
+  `git branch --no-color`
+    .split(/\n/)
+    .reject { |line| line.start_with?("+") } # ignore workstrees
+    .map { |line| line.gsub(/^[* ]+/, '') }
+    .-([head_branch])
+puts "#{branches.size} local branches"
+
+branches.each do |branch|
+  puts branch
+  if echo_run "git rebase #{head_branch} #{branch} --quiet > /dev/null || (git rebase --abort; false)"
+    puts "\e[32mrebased\e[0m"
+  else
+    puts "\e[31mconflicts\e[0m"
+  end
+end
