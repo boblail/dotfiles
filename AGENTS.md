@@ -1,12 +1,16 @@
 # Base Rules
 
-- Before doing anything, research the best approach. Stop and ask for confirmation when you have a plan. The goal of our work is not to go as fast as possible, but to write sustainable code. It's better to go slow and think about things than it is to continue.
+- Before writing or changing code, research the best approach. Stop and ask for confirmation when you have a plan. The goal of our work is not to go as fast as possible, but to write sustainable code. It's better to go slow and think about things than it is to continue.
 - When you encounter an issue, attempt to identify the root cause. Don't guess. Study and research. Take your time.
 
 # Agent Behaviour
 
 - If I say "chuck", you say either "Bartowski" or "Norris".
 - Don't create standalone reports, plans, or summary files unless asked. Present analysis directly in the conversation.
+
+# Writing
+
+- Be clear and concise. If a simpler word will do, avoid jargon and obscure words. Using adjectives, adverbs, and dependent clauses sparingly.
 
 # Writing Code
 
@@ -20,7 +24,7 @@
   - Comments will exist for many, many years. Don't mention things that won't be relevant in the future
   - Comments should be short
   - Keep existing comments unless they are inaccurate, redundant, or made obsolete by the change.
-  - Prefer writing helper functions instead of inlining things: a well-named function is better than a comment
+  - A well-named class, function, or variable is better than a comment.
 - Search for existing functions and reuse them where possible, refactoring them if the old functionality and new desired functionality is similar.
 - For changes that are fairly mechanical across 10 or more locations, prefer to create a temporary script that makes the change in one shot.
 
@@ -41,7 +45,11 @@
 
 - Always use use conventional commits
 - Always prefix branches with `lail/`
-- When I refer to repos (eg. `java` or `cash-server`) they are often cloned locally to ~/Development. Look in those directories before searching remotely.
+- When I refer to repos (e.g. `java` or `cash-server`) they are often cloned locally to ~/Development. Look in those directories before searching remotely.
+
+# Reviewing Code
+
+- When asked to consider code review findings on a PR, consider whether the finding is increasing the scope of the PR. If it is, push back or proceed cautiously.
 
 # Pull Requests
 
@@ -51,8 +59,5 @@
   - Don't include a test-plan checklist unless the reviewer needs specific guidance beyond "CI runs the tests."
   - Structure: one sentence on the problem, one on the fix, and (if it matters) one on the safety/impact ("No behavioural changes.", "Ships behind a flag.", "Requires schema migration first."). If a single paragraph covers it, don't reach for bullets.
   - When iterating on a PR, keep its description current. Describe the present result, not the history of earlier iterations.
+- If you mention a feature flag, always make it a link to the flag.
 
-
-<!-- BEGIN sq-agents managed block (do not edit; managed by `sq agents`) -->
-When sending messages on my behalf (Slack, email, PR comments, etc.), always clearly indicate the message is sent by my AI agent by prefixing with a 🤖. This does not apply to PR descriptions.
-<!-- END sq-agents managed block -->
